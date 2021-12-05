@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性是名称空间，必须唯一 -->
+<mapper namespace="UserID">
+    <resultMap type="com.metahospital.datacollector.model.User" id="UserMap">
+        <!-- id标签:映射主键属性
+             result标签：映射非主键属性
+             property属性:实体的属性名
+             column属性：表的字段名
+        -->
+        <id property="id" column="id"/>
+        <result property="key" column="user_key"/>
+        <result property="secret" column="user_secret"/>
+    </resultMap>
+
+    <select id="get" parameterType="map" resultMap="UserMap">
+        select id,user_key,user_secret from user where user_key = #{userKey};
+    </select>
+
+    <select id="getObjectKey" parameterType="map" resultType="string">
+        select object_key from user_data_set
+        <where>
+            id = #{dataId} and del = 0 and data_type = 5
+            <if test="userId!=null">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserToken" parameterType="map" resultType="string">
+        select token from service_token where token = #{token} and del = 0;
+    </select>
+
+    <update id="updateDataTime" parameterType="map">
+        update user_data_set set update_time = #{updateTime} where id = #{dataId}
+    </update>
+</mapper>
