@@ -12,17 +12,19 @@ import javax.servlet.http.HttpServletResponse;
 import com.metahospital.datacollector.common.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.support.spring.FastJsonJsonView;
 
 // 异常捕获统一处理返回码，实现HandlerExceptionResolver接口类会在主流程被调用
+@Component
 public class ExceptionHandler implements HandlerExceptionResolver {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandler.class);
 
-    private static final String ERROR_CODE_KEY = "errorCode";
-    private static final String ERROR_MSG_KEY = "errorMessage";
+    private static final String RET_CODE_KEY = "retcode";
+    private static final String MSG_KEY = "message";
     private static final String DATA_KEY = "data";
 
 
@@ -34,8 +36,8 @@ public class ExceptionHandler implements HandlerExceptionResolver {
         Map<String, Object> attributes = new HashMap<>();
 
         RestResponse res = RestResponse.processErrorResponse(ex);
-        attributes.put(ERROR_CODE_KEY, res.getErrorCode());
-        attributes.put(ERROR_MSG_KEY, res.getErrorMessage());
+        attributes.put(RET_CODE_KEY, res.getRetcode());
+        attributes.put(MSG_KEY, res.getMessage());
         attributes.put(DATA_KEY, res.getData());
 
         view.setAttributesMap(attributes);

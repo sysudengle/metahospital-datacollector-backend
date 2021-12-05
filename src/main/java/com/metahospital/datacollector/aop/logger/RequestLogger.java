@@ -51,7 +51,7 @@ public class RequestLogger {
 
         LOGGER.info(String.format("method: %s, return status: %d",
                 joinPoint.getSignature().getName(),
-                response.getErrorCode()));
+                response.getRetcode()));
     }
 
     private String convertArgsToStr(Object arg) {

@@ -11,19 +11,19 @@ public class RestResponse<T> {
 
     public static final RestResponse SUCCESS = new RestResponse();
 
-    public static final RestResponse ERROR_UNKNOWN = new RestResponse(RestErrorCode.UNKONW_ERROR, "系统异常！");
+    public static final RestResponse ERROR_UNKNOWN = new RestResponse(RestCode.UNKONW_ERROR, "系统异常！");
 
     private static final String EMPTY_STRING = "";
 
-    private int errorCode = RestErrorCode.SUCCESS;
-    private String errorMessage = EMPTY_STRING;
+    private int retcode = RestCode.SUCCESS;
+    private String message = EMPTY_STRING;
     private T data;
 
     public RestResponse() {}
 
-    public RestResponse(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+    public RestResponse(int retcode, String message) {
+        this.retcode = retcode;
+        this.message = message;
     }
 
     public RestResponse(T data) {
@@ -34,34 +34,34 @@ public class RestResponse<T> {
         RestResponse res = new RestResponse();
 
         if (ex instanceof ClientException) {
-            res.setErrorCode(RestErrorCode.BIZ_ARGUMENT_INVALID);
+            res.setRetcode(RestCode.BIZ_ARGUMENT_INVALID);
         } else if (ex instanceof ServerException) {
-            res.setErrorCode(RestErrorCode.SERVER_SIDE_ERROR);
+            res.setRetcode(RestCode.DB_REQ_TIMEOUT_ERROR);
         } else if (ex instanceof IllegalArgumentException) {
-            res.setErrorCode(RestErrorCode.BIZ_ARGUMENT_INVALID);
+            res.setRetcode(RestCode.BIZ_ARGUMENT_INVALID);
         } else {
-            res.setErrorCode(RestErrorCode.UNKONW_ERROR);
+            res.setRetcode(RestCode.UNKONW_ERROR);
         }
 
-        res.setErrorMessage(ex.getMessage());
+        res.setMessage(ex.getMessage());
 
         return res;
     }
 
-    public int getErrorCode() {
-        return errorCode;
+    public int getRetcode() {
+        return retcode;
     }
 
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
+    public void setRetcode(int retcode) {
+        this.retcode = retcode;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {
