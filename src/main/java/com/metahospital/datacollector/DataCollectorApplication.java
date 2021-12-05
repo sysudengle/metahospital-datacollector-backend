@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ServletComponentScan
 public class DataCollectorApplication {
     public static void main(String[] args) {
+        //just a test,it will be deleted
         SpringApplication.run(DataCollectorApplication.class, args);
     }
 }
