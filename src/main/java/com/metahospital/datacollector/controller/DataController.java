@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DataController {
     @Autowired
     private DataService dataService;
+    //这里出了问题
 
     @GetMapping(value = "/holly/test", produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<String> hollytest(@RequestParam(value = "id", required = false) String id, @RequestParam("name") String name) {
