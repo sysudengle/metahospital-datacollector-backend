@@ -29,7 +29,6 @@ public class DataServiceImpl implements DataService {
         if (id == null || id.isEmpty()) {
             throw new ClientException(ClientException.INVALID_PARAM);
         }
-
-        return id + "|" + name;
+        return id + "|" + name + "|" + testDao.get("1").getId();
     }
 }
