@@ -1,21 +1,19 @@
 /*
+ * Created Date: 2021-12-10 14:28:46
+ * Author: allendeng
+ *
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+ *
  */
 package com.metahospital.datacollector.common;
 
-import com.metahospital.datacollector.aop.handler.ClientException;
-import com.metahospital.datacollector.aop.handler.ServerException;
+import com.metahospital.datacollector.aop.handler.CollectorException;
 
 // 接口回包信息
 public class RestResponse<T> {
-
-    public static final RestResponse SUCCESS = new RestResponse();
-
-    public static final RestResponse ERROR_UNKNOWN = new RestResponse(RestCode.UNKONW_ERROR, "系统异常！");
-
     private static final String EMPTY_STRING = "";
 
-    private int retcode = RestCode.SUCCESS;
+    private int retcode = RestCode.SUCCESS.getValue();
     private String message = EMPTY_STRING;
     private T data;
 
@@ -33,14 +31,11 @@ public class RestResponse<T> {
     public static RestResponse processErrorResponse(Exception ex) {
         RestResponse res = new RestResponse();
 
-        if (ex instanceof ClientException) {
-            res.setRetcode(RestCode.BIZ_ARGUMENT_INVALID);
-        } else if (ex instanceof ServerException) {
-            res.setRetcode(RestCode.DB_REQ_TIMEOUT_ERROR);
-        } else if (ex instanceof IllegalArgumentException) {
-            res.setRetcode(RestCode.BIZ_ARGUMENT_INVALID);
+        if (ex instanceof CollectorException) {
+            CollectorException cEx = (CollectorException) ex;
+            res.setRetcode(cEx.getRestCode());
         } else {
-            res.setRetcode(RestCode.UNKONW_ERROR);
+            res.setRetcode(RestCode.UNKONW_ERR.getValue());
         }
 
         res.setMessage(ex.getMessage());

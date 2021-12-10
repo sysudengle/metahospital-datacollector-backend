@@ -1,7 +1,11 @@
 /*
+ * Created Date: 2021-12-10 14:28:46
+ * Author: haoyuan
+ *
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+ *
  */
-package com.metahospital.datacollector.dao.mysql;
+package com.metahospital.datacollector.dao;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -12,7 +16,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-public class MybatisUtil {
+public class MysqlDao {
     private static ThreadLocal<SqlSession> threadLocal = new ThreadLocal<SqlSession>();
     private static SqlSessionFactory sqlSessionFactory;
     
@@ -26,7 +30,7 @@ public class MybatisUtil {
         }
     }
 
-    private MybatisUtil(){}
+    private MysqlDao(){}
 
     public static SqlSession getSqlSession(){
         SqlSession sqlSession = threadLocal.get();
@@ -46,7 +50,7 @@ public class MybatisUtil {
     }
 
     public static void main(String[] args) {
-        Connection conn = MybatisUtil.getSqlSession().getConnection();
+        Connection conn = MysqlDao.getSqlSession().getConnection();
         System.out.println(conn!=null ? "连接成功" : "连接失败");
     }
 }

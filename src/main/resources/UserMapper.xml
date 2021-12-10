@@ -7,7 +7,7 @@
 
 <!-- namespace属性是名称空间，必须唯一 -->
 <mapper namespace="UserID">
-    <resultMap type="com.metahospital.datacollector.dao.mysql.entity.User" id="UserMap">
+    <resultMap type="com.metahospital.datacollector.dao.entity.User" id="UserMap">
         <!-- id标签:映射主键属性
              result标签：映射非主键属性
              property属性:实体的属性名

@@ -4,14 +4,14 @@
 package com.metahospital.datacollector.dao;
 
 import static org.junit.Assert.fail;
-import com.metahospital.datacollector.dao.mysql.entity.User;
+
+import com.metahospital.datacollector.aop.handler.CollectorException;
+import com.metahospital.datacollector.dao.entity.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.metahospital.datacollector.aop.handler.ClientException;
 
 public class TestDaoTest {
     public static final Logger LOGGER = LoggerFactory.getLogger(TestDaoTest.class);
@@ -32,7 +32,7 @@ public class TestDaoTest {
     public void testCheckToken() {
         try {
             testDao.checkTokenValid("9cb0112d9fbdf9010b7e022270c4ca63");
-        } catch (ClientException ex) {
+        } catch (CollectorException ex) {
             LOGGER.error("check token error", ex);
             fail();
         }

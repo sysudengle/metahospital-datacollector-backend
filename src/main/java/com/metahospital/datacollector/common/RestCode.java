@@ -1,16 +1,30 @@
 /*
+ * Created Date: 2021-12-10 14:28:46
+ * Author: allendeng
+ * -----
+ * Last Modified: 2021-12-10 15:24:47
+ * Modified By: laynexie
+ * -----
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+ *
+ * -----
  */
 package com.metahospital.datacollector.common;
 
-public class RestCode {
-    public static final int UNKONW_ERROR = 101;
+public enum RestCode {
+    UNKONW_ERR(-1),
+    SUCCESS(200),
+    PARAM_INVALID_ERR(400),
+    DB_REQ_TIMEOUT_ERR(500),
+    REDIS_REQ_ERR(501),
+    LOGIC_PROCESS_ERR(502);
 
-    public static final int SUCCESS = 200;
+    private final int value;
+    RestCode(int value) {
+        this.value = value;
+    }
 
-    // 400自增值为客户端错误
-    public static final int BIZ_ARGUMENT_INVALID = 400;
-
-    // 500自增值为后台错误
-    public static final int DB_REQ_TIMEOUT_ERROR = 500;
+    public int getValue() {
+        return this.value;
+    }
 }
