@@ -11,14 +11,21 @@ import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
 import com.metahospital.datacollector.dao.RedisDao;
 import com.metahospital.datacollector.dao.TestDao;
+import com.metahospital.datacollector.dao.UserDao;
+import com.metahospital.datacollector.dao.WechatAccountDao;
+import com.metahospital.datacollector.dao.entity.User;
+import com.metahospital.datacollector.dao.entity.WechatAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.keyvalue.core.IdentifierGenerator;
 import org.springframework.stereotype.Service;
 
 import com.metahospital.datacollector.service.DataService;
 
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class DataServiceImpl implements DataService {
@@ -26,10 +33,13 @@ public class DataServiceImpl implements DataService {
 
     @Autowired
     private TestDao testDao;
-
     @Autowired
     private RedisDao redisDao;
-
+	@Autowired
+	private WechatAccountDao wechatAccountDao;
+	@Autowired
+	private UserDao userDao;
+	
     public DataServiceImpl() {
 
     }
@@ -51,6 +61,16 @@ public class DataServiceImpl implements DataService {
         if (id == null || id.isEmpty()) {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR);
         }
-        return id + "|" + name + "|" + testDao.get("1").getId();
+        long userId = genUserId();
+	    userDao.replace(new User(userId, "handsome_"+userId));
+	    User user = userDao.get(userId);
+        wechatAccountDao.replace(new WechatAccount("aaa", "bbb", "ccc", user.getUserId()));
+        WechatAccount wechatAccount = wechatAccountDao.get("aaa");
+        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
     }
+
+	private long genUserId() {
+		// todo why 这个随便写的，有问题的，需要添加一个id生成工具
+		return Math.abs(ThreadLocalRandom.current().nextLong());
+	}
 }

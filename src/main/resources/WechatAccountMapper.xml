@@ -6,34 +6,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <!-- namespace属性是名称空间，必须唯一 -->
-<mapper namespace="UserMapper">
-    <resultMap type="com.metahospital.datacollector.dao.entity.User" id="UserResultMap">
+<mapper namespace="WechatAccountMapper">
+    <resultMap type="com.metahospital.datacollector.dao.entity.WechatAccount" id="WechatAccountResultMap">
         <!-- id标签:映射主键属性
              result标签：映射非主键属性
              property属性:实体的属性名
              column属性：表的字段名
         -->
-        <id property="userId" column="user_id"/>
-        <result property="name" column="name"/>
+        <id property="openId" column="open_id"/>
+        <result property="unionId" column="union_id"/>
+	    <result property="sessionKey" column="session_key"/>
+	    <result property="userId" column="user_id"/>
     </resultMap>
 
-    <select id="get" parameterType="map" resultMap="UserResultMap">
-        select user_id,name from user where user_id = #{userId};
+    <select id="get" parameterType="map" resultMap="WechatAccountResultMap">
+        select open_id,union_id,session_key,user_id from wechat_account where open_id = #{openId};
     </select>
 
-<!--	<update id="update" parameterType="map">-->
-<!--		update user set name = #{name} where user_id = #{userId};-->
-<!--    </update>-->
-	<update id="replace" parameterType="com.metahospital.datacollector.dao.entity.User">
-		replace into user
-		(user_id, name)
+	<update id="replace" parameterType="com.metahospital.datacollector.dao.entity.WechatAccount">
+		replace into wechat_account
+		(open_id, union_id, session_key, user_id)
 		values
-		(#{userId}, #{name});
+		(#{openId}, #{unionId}, #{sessionKey}, #{userId});
     </update>
 
-<!--	<update id="update" parameterType="map">-->
+<!--	<insert id="insert" parameterType="map">-->
 <!--		update user set name = #{name} where user_id = #{userId};-->
-<!--    </update>-->
+<!--    </insert>-->
+
 
 <!--    <select id="getObjectKey" parameterType="map" resultType="string">-->
 <!--        select object_key from user_data_set-->

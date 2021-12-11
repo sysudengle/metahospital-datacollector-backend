@@ -47,6 +47,7 @@
 
     <mappers>
         <mapper resource="UserMapper.xml"/>
+	    <mapper resource="WechatAccountMapper.xml"/>
     </mappers>
 
 </configuration>

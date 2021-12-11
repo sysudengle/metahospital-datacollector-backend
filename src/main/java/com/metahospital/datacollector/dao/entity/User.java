@@ -9,31 +9,30 @@ package com.metahospital.datacollector.dao.entity;
 
 
 public class User {
-    private String id;
-    private String key;
-    private String secret;
+	private long userId;
+	private String name;
 
-    public String getId() {
-        return id;
-    }
+	public User() {
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public User(long userId, String name) {
+		this.userId = userId;
+		this.name = name;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public long getUserId() {
+		return userId;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
-    public String getSecret() {
-        return secret;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 }
