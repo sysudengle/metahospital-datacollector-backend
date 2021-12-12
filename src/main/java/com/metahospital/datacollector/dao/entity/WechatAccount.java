@@ -1,12 +1,28 @@
 package com.metahospital.datacollector.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import jdk.nashorn.internal.ir.annotations.Immutable;
+import lombok.Data;
+
 /**
  * Created on 2021/12/11.
  */
+/**
+ * Updated on 2021/12/12.
+ */
+@Data
+
 public class WechatAccount {
+
 	private String openId;
+
 	private String unionId;
+
 	private String sessionKey;
+
 	private long userId;
 
 	public WechatAccount() {
