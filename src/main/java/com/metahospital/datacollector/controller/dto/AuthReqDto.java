@@ -6,5 +6,5 @@ import lombok.Setter;
 public class AuthReqDto {
     @Setter
     @Getter
-    private String weixinAuthCode;
+    private String wechatJsCode;
 }

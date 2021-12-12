@@ -10,7 +10,6 @@ package com.metahospital.datacollector.controller;
 import com.metahospital.datacollector.common.RestResponse;
 import com.metahospital.datacollector.controller.dto.AuthReqDto;
 import com.metahospital.datacollector.controller.dto.AuthRspDto;
-import com.metahospital.datacollector.service.impl.DataServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import com.metahospital.datacollector.service.DataService;
 
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RequestMapping("/api")
@@ -38,10 +40,15 @@ public class DataController {
     }
 
     @PostMapping(value = "/auth", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> auth(@RequestBody AuthReqDto authReqDto) {
+    public RestResponse<AuthRspDto> auth(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
         AuthRspDto rspDto = new AuthRspDto();
-        LOGGER.info("auth api received: " + authReqDto.getWeixinAuthCode());
-        rspDto.setOpenId(authReqDto.getWeixinAuthCode() + "|processed");
+
+        // sessionId生成
+        String sessionId = request.getSession(true).getId();
+        LOGGER.info("auth api sessionid: " + sessionId);
+        LOGGER.info("auth api received: " + authReqDto.getWechatJsCode());
+        rspDto.setOpenId(authReqDto.getWechatJsCode() + "|processed");
+
         return new RestResponse<>(rspDto);
     }
 
