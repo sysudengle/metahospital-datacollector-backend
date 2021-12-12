@@ -9,4 +9,4 @@ export PATH=/home/scmtools/buildkit/maven/apache-maven-3.3.9/bin:$PATH
 mvn clean package -DskipTests
 
 # save compile output
-mkdir output && cp ./target/data-processor-0.0.1-SNAPSHOT.jar ./output && ls ./output
+mkdir output && cp ./target/data-collector-0.0.1-SNAPSHOT.jar ./output && ls ./output

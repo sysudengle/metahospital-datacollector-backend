@@ -8,5 +8,5 @@ Profiles:
     - profile:
       name : dev
       env : centos6u3
-      command : sh ./build.sh
+      command : sh ./update_dev.bat
       release : true
