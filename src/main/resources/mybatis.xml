@@ -24,6 +24,8 @@
                 <property name="url" value="${mysql.url}"/>
                 <property name="username" value="${mysql.username}"/>
                 <property name="password" value="${mysql.password}"/>
+                <property name="poolPingQuery" value="select now()" />
+                <property name="poolPingEnabled" value="true" />
             </dataSource>
         </environment>
 
@@ -39,7 +41,7 @@
                 <property name="url" value="${oracle.url}"/>
                 <property name="username" value="${oracle.username}"/>
                 <property name="password" value="${oracle.password}"/>
-                <property name="poolPingQuery" value="select * from user limit 1" />
+                <property name="poolPingQuery" value="select now()" />
                 <property name="poolPingEnabled" value="true" />
             </dataSource>
         </environment>
