@@ -16,6 +16,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+
+
 public class MysqlDao {
     private static ThreadLocal<SqlSession> threadLocal = new ThreadLocal<SqlSession>();
     private static SqlSessionFactory sqlSessionFactory;
