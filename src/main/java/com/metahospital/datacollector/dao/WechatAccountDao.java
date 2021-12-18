@@ -33,8 +33,9 @@ public class WechatAccountDao {
             Map<String, Object> map = new HashMap();
             map.put("openId", openId);
             List<WechatAccount> wechatAccounts = sqlSession.selectList("WechatAccountMapper.get", map);
+            // 数据不存在不应该抛出异常，返回空结果
             if (wechatAccounts == null || wechatAccounts.isEmpty()) {
-                throw new CollectorException(RestCode.PARAM_INVALID_ERR);
+                return null;
             }
             return wechatAccounts.get(0);
         } catch (CollectorException e) {

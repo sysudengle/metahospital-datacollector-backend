@@ -10,18 +10,13 @@ public class AuthRspDto {
 
     @Setter
     @Getter
-    private long userId;
-
-    @Setter
-    @Getter
-    private String sessionId;
+    private String userId;
 
     public AuthRspDto() {
     }
 
-    public AuthRspDto(String openId, String sessionId, long userId) {
+    public AuthRspDto(String openId, String userId) {
         this.openId = openId;
-        this.sessionId = sessionId;
         this.userId = userId;
     }
 

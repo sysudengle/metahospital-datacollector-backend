@@ -35,7 +35,7 @@ public class UserDao {
             map.put("userId", userId);
             List<User> users = sqlSession.selectList("UserMapper.get", map);
             if (users == null || users.isEmpty()) {
-                throw new CollectorException(RestCode.PARAM_INVALID_ERR);
+                return null;
             }
             return users.get(0);
         } catch (CollectorException e) {

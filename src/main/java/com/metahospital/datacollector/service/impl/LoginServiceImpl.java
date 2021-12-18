@@ -17,6 +17,7 @@ import java.util.Random;
 
 
 @Service
+@Deprecated
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
@@ -41,6 +42,6 @@ public class LoginServiceImpl implements LoginService {
         User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount(openId, unionId, sessionKey, user.getUserId()));
 
-        return new AuthRspDto(openId,sessionId,userId);
+        return new AuthRspDto(openId,String.valueOf(userId));
     }
 }

@@ -2,19 +2,16 @@
  * Created Date: 2021-12-10 14:28:46
  * Author: allendeng
  *
+ * Last modified: 2021-12-18 22:28
+ * Author: allendeng
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
  *
  */
 package com.metahospital.datacollector.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.common.RestResponse;
-import com.metahospital.datacollector.common.WechatUtil;
 import com.metahospital.datacollector.controller.dto.AuthReqDto;
 import com.metahospital.datacollector.controller.dto.AuthRspDto;
-import com.metahospital.datacollector.dao.WechatAccountDao;
-import com.metahospital.datacollector.dao.entity.User;
-import com.metahospital.datacollector.dao.entity.WechatAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +24,6 @@ import com.metahospital.datacollector.service.DataService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Random;
 
 @Slf4j
 @RequestMapping("/api")
@@ -43,17 +38,13 @@ public class DataController {
 
     @GetMapping(value = "/holly/test", produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<String> hollytest(@RequestParam(value = "id", required = false) String id, @RequestParam("name") String name) {
-        return new RestResponse<>(dataService.TestMergeData(id, name));
+        return new RestResponse<>(dataService.testMergeData(id, name));
     }
 
-    @PostMapping(value = "/auth", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> auth(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
-        AuthRspDto rspDto = new AuthRspDto("aaa","bbb",123456);
-           // sessionId生成
-        String sessionId = request.getSession(true).getId();
-        LOGGER.info("auth api sessionid: " + sessionId);
-        LOGGER.info("auth api received: " + authReqDto.getWechatJsCode());
-        rspDto.setOpenId(authReqDto.getWechatJsCode() + "|processed");
+    // 微信登陆鉴权接口
+    @PostMapping(value = "/auth_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AuthRspDto> authWx(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
+        AuthRspDto rspDto = dataService.authWX(authReqDto);
         return new RestResponse<>(rspDto);
     }
 

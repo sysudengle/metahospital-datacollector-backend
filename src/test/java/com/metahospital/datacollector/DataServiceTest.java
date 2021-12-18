@@ -24,7 +24,7 @@ public class DataServiceTest {
     @Test
     public void testCheck() {
         try {
-            dataService.TestMergeData("123", "alllendeng");
+            dataService.testMergeData("123", "alllendeng");
         } catch (IllegalArgumentException ex) {
             LOGGER.error("check unit test error", ex);
             fail();

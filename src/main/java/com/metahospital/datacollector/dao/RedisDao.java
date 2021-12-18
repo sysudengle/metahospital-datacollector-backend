@@ -2,6 +2,8 @@
  * Created Date: 2021-12-10 14:28:46
  * Author: allendeng
  *
+ * Last modified: 2021-12-18 22:28
+ * Author: allendeng
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
  *
  */
@@ -28,6 +30,32 @@ import java.util.stream.Collectors;
 @Component
 public class RedisDao {
     public static final Logger LOGGER = LoggerFactory.getLogger(RedisDao.class);
+    private static final String EMPTY_STRING = "";
+    public enum PriKeyType {
+        OPENID_TYPE("0"),
+        USERID_TYPE("1");
+
+        private final String prefix;
+        PriKeyType(String prefix) {
+            this.prefix = prefix + "_";
+        }
+
+        public String getPrefix() {
+            return this.prefix;
+        }
+    }
+
+    // 二级用户key
+//    public enum RedisSubKey {
+//        private final String fieldName;
+//        RedisSubKey(String fieldName) {
+//            this.fieldName = fieldName;
+//        }
+//
+//        public String getFieldName() {
+//            return this.fieldName;
+//        }
+//    }
 
     @Value("${collector.redis.data.alive-second}")
     private long aliveSecond;
@@ -36,9 +64,10 @@ public class RedisDao {
     protected StringRedisTemplate redisTemplate;
 
     public boolean set(final String key, final String value) {
-        boolean hasSet = false;
+        boolean hasSet;
         try {
             redisTemplate.opsForValue().set(key, value);
+            redisTemplate.expire(key, aliveSecond, TimeUnit.SECONDS);
             hasSet = true;
         } catch (Exception ex) {
             // redis错误不应该影响主流程, 仅测试用
@@ -75,16 +104,28 @@ public class RedisDao {
         return hasSet;
     }
 
-    public Map<String, String> hGet(final String key) {
+    public Map<String, String> hGetAll(final String key) {
         try {
             Map<Object, Object> objMapRet = redisTemplate.opsForHash().entries(key);
             // 直接类型转换，确保写入的值就是string类型
             return (Map) objMapRet;
         } catch (Exception ex) {
             // redis错误不应该影响主流程
-            LOGGER.error("hGet err", ex.getLocalizedMessage());
+            LOGGER.error("hGetAll err", ex.getLocalizedMessage());
         }
 
         return Collections.emptyMap();
+    }
+
+    public String hGet(final String priKey, final String subKey) {
+        try {
+            return (String) redisTemplate.opsForHash().get(priKey, subKey);
+            // 直接类型转换，确保写入的值就是string类型
+        } catch (Exception ex) {
+            // redis错误不应该影响主流程
+            LOGGER.error("hGet err", ex.getLocalizedMessage());
+        }
+
+        return EMPTY_STRING;
     }
 }
