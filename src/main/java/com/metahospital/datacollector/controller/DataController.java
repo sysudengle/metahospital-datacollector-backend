@@ -43,7 +43,7 @@ public class DataController {
 
     // 微信登陆鉴权接口
     @PostMapping(value = "/auth_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> authWx(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
+    public RestResponse<AuthRspDto> authWX(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
         AuthRspDto rspDto = dataService.authWX(authReqDto);
         return new RestResponse<>(rspDto);
     }
