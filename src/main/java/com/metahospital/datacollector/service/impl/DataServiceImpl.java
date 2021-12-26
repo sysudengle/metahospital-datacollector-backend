@@ -129,6 +129,13 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public RegisterWXDoctorRspDto registerDoctor(RegisterWXDoctorReqDto registerWXDoctorReqDto) {
+        RegisterWXDoctorRspDto rspDto = new RegisterWXDoctorRspDto();
+
+        return rspDto;
+    }
+
+    @Override
     public AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto) {
         AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
 

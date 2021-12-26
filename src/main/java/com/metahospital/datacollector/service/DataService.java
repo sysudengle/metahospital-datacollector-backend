@@ -14,6 +14,8 @@ public interface DataService {
 
     AuthRspDto authWX(AuthReqDto authReqDto);
 
+    RegisterWXDoctorRspDto registerDoctor(RegisterWXDoctorReqDto registerWXDoctorReqDto);
+
     AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto);
     GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
 

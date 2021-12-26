@@ -55,18 +55,25 @@ public class DataController {
         return new RestResponse<>(rspDto);
     }
 
+    // 微信医生注册接口
+    @PostMapping(value = "wx/doctor/register", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<RegisterWXDoctorRspDto>  registerDoctorWX(@RequestBody RegisterWXDoctorReqDto registerReqDto) {
+        RegisterWXDoctorRspDto rspDto = dataService.registerDoctor(registerReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
     // 新建档案接口
     @PostMapping(value = "wx/profile/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<AddWXProfileRspDto> addWXProfile(@RequestBody AddWXProfileReqDto addWXProfileReqDto) {
         AddWXProfileRspDto rspDto = dataService.addProfile(addWXProfileReqDto);
-        return new RestResponse<AddWXProfileRspDto>(rspDto);
+        return new RestResponse<>(rspDto);
     }
 
     // 根据微信账号获取所有档案接口
     @PostMapping(value = "wx/profiles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<GetWXProfilesRspDto> getWXProfiles(@RequestBody GetWXProfilesReqDto getWXProfilesReqDto) {
         GetWXProfilesRspDto rspDto = dataService.getProfiles(getWXProfilesReqDto);
-        return new RestResponse<GetWXProfilesRspDto>(rspDto);
+        return new RestResponse<>(rspDto);
     }
 
     // 新建预约接口
@@ -80,7 +87,7 @@ public class DataController {
     @PostMapping(value = "/wx/bookings", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<GetWXBookingsRspDto> getBooks(@RequestBody GetWXBookingsReqDto getWXBookingsReqDto) {
         GetWXBookingsRspDto rspDto = dataService.getBookings(getWXBookingsReqDto);
-        return new RestResponse<GetWXBookingsRspDto>(rspDto);
+        return new RestResponse<>(rspDto);
     }
 
 

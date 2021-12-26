@@ -1,9 +1,10 @@
-package com.metahospital.datacollector.common;
+package com.metahospital.datacollector.controller.dto;
 
+import com.metahospital.datacollector.common.Gender;
 import lombok.Data;
 
 @Data
-public class ProfileInfo {
+public class ProfileInfoDto {
     private int profileId = -1; // 写操作自行生成
     private int hospitalId; // 医院ID
     private int personalID; // 身份证号码
