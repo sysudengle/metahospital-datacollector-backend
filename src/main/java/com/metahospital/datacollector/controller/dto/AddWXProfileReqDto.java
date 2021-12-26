@@ -4,6 +4,6 @@ import com.metahospital.datacollector.common.ProfileInfo;
 import lombok.Data;
 
 @Data
-public class AddProfileReqDto extends BaseDto {
+public class AddWXProfileReqDto extends BaseDto {
     private ProfileInfo profileInfo;
 }

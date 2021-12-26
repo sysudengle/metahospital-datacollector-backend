@@ -49,9 +49,9 @@ public class DataController {
 
     // 新建档案接口
     @PostMapping(value = "wx/profile/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AddProfileRspDto> addWXProfile(@RequestBody AddProfileReqDto addProfileReqDto, HttpServletRequest request) {
-        AddProfileRspDto rspDto = dataService.addProfile(addProfileReqDto);
-        return new RestResponse<AddProfileRspDto>(rspDto);
+    public RestResponse<AddWXProfileRspDto> addWXProfile(@RequestBody AddWXProfileReqDto addWXProfileReqDto, HttpServletRequest request) {
+        AddWXProfileRspDto rspDto = dataService.addProfile(addWXProfileReqDto);
+        return new RestResponse<AddWXProfileRspDto>(rspDto);
     }
 
     // 根据微信账号获取所有档案接口
@@ -63,16 +63,16 @@ public class DataController {
 
     // 新建预约接口
     @PostMapping(value = "wx/booking/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AddBookingRspDto> addBook(@RequestBody AddAppointmentReqDto appointmentReqDto, HttpServletRequest request) {
-        AddBookingRspDto rspDto = dataService.addBooking(appointmentReqDto);
+    public RestResponse<AddWXBookingRspDto> addBook(@RequestBody AddWXBookingReqDto appointmentReqDto, HttpServletRequest request) {
+        AddWXBookingRspDto rspDto = dataService.addBooking(appointmentReqDto);
         return new RestResponse<>(rspDto);
     }
 
     // 根据档案获取所有预约接口
     @PostMapping(value = "/wx/bookings", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<GetBookingsRspDto> getBooks(@RequestBody GetBookingsReqDto getBookingsReqDto, HttpServletRequest request) {
-        GetBookingsRspDto rspDto = dataService.getBookings(getBookingsReqDto);
-        return new RestResponse<GetBookingsRspDto>(rspDto);
+    public RestResponse<GetWXBookingsRspDto> getBooks(@RequestBody GetWXBookingsReqDto getWXBookingsReqDto, HttpServletRequest request) {
+        GetWXBookingsRspDto rspDto = dataService.getBookings(getWXBookingsReqDto);
+        return new RestResponse<GetWXBookingsRspDto>(rspDto);
     }
 
 

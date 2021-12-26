@@ -7,5 +7,5 @@ import lombok.Data;
 
 @Data
 public class GetWXProfileRspDto {
-    private Map<Integer, ProfileInfo> dossierInfoMap;
+    private Map<Integer, ProfileInfo> profileInfoMap;
 }

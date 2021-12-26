@@ -129,8 +129,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public AddProfileRspDto addProfile(AddProfileReqDto addProfileReqDto) {
-        AddProfileRspDto rspDto = new AddProfileRspDto();
+    public AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto) {
+        AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
 
         return rspDto;
     }
@@ -143,15 +143,15 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public AddBookingRspDto addBooking(AddAppointmentReqDto addAppointmentReqDto) {
-        AddBookingRspDto rspDto = new AddBookingRspDto();
+    public AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto) {
+        AddWXBookingRspDto rspDto = new AddWXBookingRspDto();
 
         return rspDto;
     }
 
     @Override
-    public GetBookingsRspDto getBookings(GetBookingsReqDto getAppointmentRspDto) {
-        GetBookingsRspDto rspDto = new GetBookingsRspDto();
+    public GetWXBookingsRspDto getBookings(GetWXBookingsReqDto getAppointmentRspDto) {
+        GetWXBookingsRspDto rspDto = new GetWXBookingsRspDto();
 
         return rspDto;
     }

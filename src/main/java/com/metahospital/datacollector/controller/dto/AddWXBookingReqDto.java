@@ -4,7 +4,7 @@ import com.metahospital.datacollector.common.BookingInfo;
 import lombok.Data;
 
 @Data
-public class AddAppointmentReqDto extends BaseDto {
-    private int dossierId;
+public class AddWXBookingReqDto extends BaseDto {
+    private int bookingId;
     private BookingInfo bookingInfo;
 }

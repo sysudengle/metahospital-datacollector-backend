@@ -6,6 +6,6 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class GetBookingsRspDto {
+public class GetWXBookingsRspDto {
     private Map<Integer, BookingInfo> appointmentInfoMap;
 }
