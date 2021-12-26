@@ -1,4 +1,4 @@
-package com.metahospital.datacollector.common;
+package com.metahospital.datacollector.common.util;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

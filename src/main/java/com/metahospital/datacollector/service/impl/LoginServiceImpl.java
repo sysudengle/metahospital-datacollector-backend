@@ -1,7 +1,7 @@
 package com.metahospital.datacollector.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.metahospital.datacollector.common.WechatUtil;
+import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.AuthRspDto;
 import com.metahospital.datacollector.dao.UserDao;
 import com.metahospital.datacollector.dao.WechatAccountDao;

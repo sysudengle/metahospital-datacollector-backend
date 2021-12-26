@@ -12,7 +12,7 @@ package com.metahospital.datacollector.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
-import com.metahospital.datacollector.common.WechatUtil;
+import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.*;
 import com.metahospital.datacollector.dao.RedisDao;
 import com.metahospital.datacollector.dao.TestDao;
@@ -136,8 +136,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public GetWXProfileRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
-        GetWXProfileRspDto rspDto = new GetWXProfileRspDto();
+    public GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
+        GetWXProfilesRspDto rspDto = new GetWXProfilesRspDto();
 
         return rspDto;
     }

@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class AddWXBookingReqDto extends BaseDto {
-    private int bookingId;
+    private long profileId; // 档案id
     private BookingInfo bookingInfo;
 }

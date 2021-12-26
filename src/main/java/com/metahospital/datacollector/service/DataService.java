@@ -15,7 +15,7 @@ public interface DataService {
     AuthRspDto authWX(AuthReqDto authReqDto);
 
     AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto);
-    GetWXProfileRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
+    GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
 
     AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto);
     GetWXBookingsRspDto getBookings(GetWXBookingsReqDto getAppointmentRspDto);
