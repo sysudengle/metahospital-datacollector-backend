@@ -3,7 +3,7 @@ package com.metahospital.datacollector.common;
 import lombok.Data;
 
 @Data
-public class DossierInfo {
+public class ProfileInfo {
     private int hospitalId; // 医院ID
     private int IDNumber; // 身份证号码
     private Gender gender; // 性别

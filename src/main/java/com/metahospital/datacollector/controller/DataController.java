@@ -48,31 +48,31 @@ public class DataController {
     }
 
     // 新建档案接口
-    @PostMapping(value = "/add_dossier", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> addDossier(@RequestBody AddDossierReqDto addDossierReqDto, HttpServletRequest request) {
-        AddDossierRspDto rspDto = dataService.addDossier(addDossierReqDto);
-        return new RestResponse<>(rspDto);
+    @PostMapping(value = "wx/profile/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AddProfileRspDto> addWXProfile(@RequestBody AddProfileReqDto addProfileReqDto, HttpServletRequest request) {
+        AddProfileRspDto rspDto = dataService.addProfile(addProfileReqDto);
+        return new RestResponse<AddProfileRspDto>(rspDto);
     }
 
     // 根据微信账号获取所有档案接口
-    @PostMapping(value = "/get_dossier_with_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> getDossierWithWX(@RequestBody GetDossierWithWXReqDto getDossierWithWXReqDto, HttpServletRequest request) {
-        GetDossierWithWXRspDto rspDto = dataService.getDossierWithWX(getDossierWithWXReqDto);
-        return new RestResponse<>(rspDto);
+    @PostMapping(value = "wx/profiles", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<GetWXProfileRspDto> getWXProfiles(@RequestBody GetWXProfilesReqDto getWXProfilesReqDto, HttpServletRequest request) {
+        GetWXProfileRspDto rspDto = dataService.getProfiles(getWXProfilesReqDto);
+        return new RestResponse<GetWXProfileRspDto>(rspDto);
     }
 
     // 新建预约接口
-    @PostMapping(value = "/add_appointment", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> addAppointment(@RequestBody AddAppointmentReqDto appointmentReqDto, HttpServletRequest request) {
-        AddAppointmentRspDto rspDto = dataService.addAppointment(appointmentReqDto);
+    @PostMapping(value = "wx/booking/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AddBookingRspDto> addBook(@RequestBody AddAppointmentReqDto appointmentReqDto, HttpServletRequest request) {
+        AddBookingRspDto rspDto = dataService.addBooking(appointmentReqDto);
         return new RestResponse<>(rspDto);
     }
 
     // 根据档案获取所有预约接口
-    @PostMapping(value = "/get_dossier_with_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> getAppointment(@RequestBody GetAppointmentReqDto getAppointmentReqDto, HttpServletRequest request) {
-        GetAppointmentRspDto rspDto = dataService.getAppointment(getAppointmentReqDto);
-        return new RestResponse<>(rspDto);
+    @PostMapping(value = "/wx/bookings", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<GetBookingsRspDto> getBooks(@RequestBody GetBookingsReqDto getBookingsReqDto, HttpServletRequest request) {
+        GetBookingsRspDto rspDto = dataService.getBookings(getBookingsReqDto);
+        return new RestResponse<GetBookingsRspDto>(rspDto);
     }
 
 

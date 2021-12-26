@@ -13,8 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
 import com.metahospital.datacollector.common.WechatUtil;
-import com.metahospital.datacollector.controller.dto.AuthReqDto;
-import com.metahospital.datacollector.controller.dto.AuthRspDto;
+import com.metahospital.datacollector.controller.dto.*;
 import com.metahospital.datacollector.dao.RedisDao;
 import com.metahospital.datacollector.dao.TestDao;
 import com.metahospital.datacollector.dao.UserDao;
@@ -125,6 +124,34 @@ public class DataServiceImpl implements DataService {
         // mock测试代码，TODEL(allen)
         // String cacheVal = redisDao.get(cacheKey);
         // LOGGER.info("mock test redis received: " + cacheVal);
+
+        return rspDto;
+    }
+
+    @Override
+    public AddProfileRspDto addProfile(AddProfileReqDto addProfileReqDto) {
+        AddProfileRspDto rspDto = new AddProfileRspDto();
+
+        return rspDto;
+    }
+
+    @Override
+    public GetWXProfileRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
+        GetWXProfileRspDto rspDto = new GetWXProfileRspDto();
+
+        return rspDto;
+    }
+
+    @Override
+    public AddBookingRspDto addBooking(AddAppointmentReqDto addAppointmentReqDto) {
+        AddBookingRspDto rspDto = new AddBookingRspDto();
+
+        return rspDto;
+    }
+
+    @Override
+    public GetBookingsRspDto getBookings(GetBookingsReqDto getAppointmentRspDto) {
+        GetBookingsRspDto rspDto = new GetBookingsRspDto();
 
         return rspDto;
     }

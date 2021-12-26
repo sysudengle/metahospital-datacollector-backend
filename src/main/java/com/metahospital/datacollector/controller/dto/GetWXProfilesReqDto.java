@@ -1,4 +1,4 @@
 package com.metahospital.datacollector.controller.dto;
 
-public class GetDossierWithWXReqDto extends BaseDto {
+public class GetWXProfilesReqDto extends BaseDto {
 }

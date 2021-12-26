@@ -3,6 +3,6 @@ package com.metahospital.datacollector.controller.dto;
 import lombok.Data;
 
 @Data
-public class GetAppointmentReqDto extends BaseDto {
-    private int dossierId;
+public class GetBookingsReqDto extends BaseDto {
+    private int bookingId;
 }

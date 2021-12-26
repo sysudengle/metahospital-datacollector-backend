@@ -4,6 +4,6 @@ import lombok.Data;
 import org.joda.time.DateTime;
 
 @Data
-public class AppointmentInfo {
+public class BookingInfo {
     private DateTime dateTime;
 }

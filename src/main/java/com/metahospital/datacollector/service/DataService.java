@@ -14,9 +14,9 @@ public interface DataService {
 
     AuthRspDto authWX(AuthReqDto authReqDto);
 
-    AddDossierRspDto addDossier(AddDossierReqDto addDossierReqDto);
-    GetDossierWithWXRspDto getDossierWithWX(GetDossierWithWXReqDto getDossierWithWXReqDto);
+    AddProfileRspDto addProfile(AddProfileReqDto addProfileReqDto);
+    GetWXProfileRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
 
-    AddAppointmentRspDto addAppointment(AddAppointmentReqDto addAppointmentReqDto);
-    GetAppointmentRspDto getAppointment(GetAppointmentReqDto getAppointmentRspDto);
+    AddBookingRspDto addBooking(AddAppointmentReqDto addAppointmentReqDto);
+    GetBookingsRspDto getBookings(GetBookingsReqDto getAppointmentRspDto);
 }
