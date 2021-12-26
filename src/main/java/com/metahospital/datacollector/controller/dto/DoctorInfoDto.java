@@ -1,7 +1,9 @@
 package com.metahospital.datacollector.controller.dto;
 
-import com.metahospital.datacollector.common.DepartmentPermission;
+import com.metahospital.datacollector.common.enums.DepartmentPermission;
+import lombok.Data;
 
+@Data
 public class DoctorInfoDto {
     private long hospitalId = -1; // 医院id
     private Boolean isValidDoctor = false; // 医生权限是否已生效

@@ -1,7 +1,6 @@
 package com.metahospital.datacollector.controller.dto;
 
-import com.metahospital.datacollector.common.DepartmentPermission;
-import com.metahospital.datacollector.common.UserType;
+import com.metahospital.datacollector.common.enums.UserType;
 import lombok.Data;
 
 @Data

@@ -1,6 +1,6 @@
 package com.metahospital.datacollector.controller.dto;
 
-import com.metahospital.datacollector.common.Gender;
+import com.metahospital.datacollector.common.enums.Gender;
 import lombok.Data;
 
 @Data
