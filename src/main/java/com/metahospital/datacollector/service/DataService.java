@@ -7,11 +7,16 @@
  */
 package com.metahospital.datacollector.service;
 
-import com.metahospital.datacollector.controller.dto.AuthReqDto;
-import com.metahospital.datacollector.controller.dto.AuthRspDto;
+import com.metahospital.datacollector.controller.dto.*;
 
 public interface DataService {
     String testMergeData(String id, String name);
 
     AuthRspDto authWX(AuthReqDto authReqDto);
+
+    AddDossierRspDto addDossier(AddDossierReqDto addDossierReqDto);
+    GetDossierWithWXRspDto getDossierWithWX(GetDossierWithWXReqDto getDossierWithWXReqDto);
+
+    AddAppointmentRspDto addAppointment(AddAppointmentReqDto addAppointmentReqDto);
+    GetAppointmentRspDto getAppointment(GetAppointmentReqDto getAppointmentRspDto);
 }

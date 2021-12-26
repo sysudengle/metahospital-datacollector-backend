@@ -10,8 +10,7 @@
 package com.metahospital.datacollector.controller;
 
 import com.metahospital.datacollector.common.RestResponse;
-import com.metahospital.datacollector.controller.dto.AuthReqDto;
-import com.metahospital.datacollector.controller.dto.AuthRspDto;
+import com.metahospital.datacollector.controller.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +46,35 @@ public class DataController {
         AuthRspDto rspDto = dataService.authWX(authReqDto);
         return new RestResponse<>(rspDto);
     }
+
+    // 新建档案接口
+    @PostMapping(value = "/add_dossier", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AuthRspDto> addDossier(@RequestBody AddDossierReqDto addDossierReqDto, HttpServletRequest request) {
+        AddDossierRspDto rspDto = dataService.addDossier(addDossierReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
+    // 根据微信账号获取所有档案接口
+    @PostMapping(value = "/get_dossier_with_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AuthRspDto> getDossierWithWX(@RequestBody GetDossierWithWXReqDto getDossierWithWXReqDto, HttpServletRequest request) {
+        GetDossierWithWXRspDto rspDto = dataService.getDossierWithWX(getDossierWithWXReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
+    // 新建预约接口
+    @PostMapping(value = "/add_appointment", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AuthRspDto> addAppointment(@RequestBody AddAppointmentReqDto appointmentReqDto, HttpServletRequest request) {
+        AddAppointmentRspDto rspDto = dataService.addAppointment(appointmentReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
+    // 根据档案获取所有预约接口
+    @PostMapping(value = "/get_dossier_with_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AuthRspDto> getAppointment(@RequestBody GetAppointmentReqDto getAppointmentReqDto, HttpServletRequest request) {
+        GetAppointmentRspDto rspDto = dataService.getAppointment(getAppointmentReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
 
     public void setDataService(DataService dataService) {
         this.dataService = dataService;

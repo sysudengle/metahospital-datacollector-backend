@@ -1,10 +1,11 @@
 package com.metahospital.datacollector.controller.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.metahospital.datacollector.common.UserType;
+import lombok.Data;
 
+@Data
 public class AuthReqDto {
-    @Setter
-    @Getter
     private String wechatJsCode;
+    private String staffId;
+    private UserType uType;
 }
