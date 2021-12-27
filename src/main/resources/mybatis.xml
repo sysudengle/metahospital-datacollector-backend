@@ -50,6 +50,8 @@
     <mappers>
         <mapper resource="UserMapper.xml"/>
 	    <mapper resource="WechatAccountMapper.xml"/>
+	    <mapper resource="InnerAccountMapper.xml"/>
+	    <mapper resource="UserDoctorMapper.xml"/>
     </mappers>
 
 </configuration>

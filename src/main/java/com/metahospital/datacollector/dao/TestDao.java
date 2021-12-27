@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
-import com.metahospital.datacollector.dao.entity.User;
+import com.metahospital.datacollector.dao.data.User;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.stereotype.Component;

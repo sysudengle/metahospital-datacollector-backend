@@ -13,18 +13,14 @@ package com.metahospital.datacollector.dao;
 
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
-import com.metahospital.datacollector.dao.entity.User;
-import com.metahospital.datacollector.dao.entity.WechatAccount;
+import com.metahospital.datacollector.dao.data.User;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO 接口未通
 @Repository
 public class UserDao {
 
@@ -62,4 +58,5 @@ public class UserDao {
             MysqlDao.closeSqlSession();
         }
     }
+    
 }

@@ -6,7 +6,7 @@ package com.metahospital.datacollector.dao;
 import static org.junit.Assert.fail;
 
 import com.metahospital.datacollector.aop.handler.CollectorException;
-import com.metahospital.datacollector.dao.entity.User;
+import com.metahospital.datacollector.dao.data.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -5,19 +5,20 @@
  * Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
  *
  */
-package com.metahospital.datacollector.dao.entity;
-
+package com.metahospital.datacollector.dao.data;
 
 public class User {
 	private long userId;
 	private String name;
+	private int userType;
 
 	public User() {
 	}
 
-	public User(long userId, String name) {
+	public User(long userId, String name, int userType) {
 		this.userId = userId;
 		this.name = name;
+		this.userType = userType;
 	}
 
 	public long getUserId() {
@@ -34,5 +35,13 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getUserType() {
+		return userType;
+	}
+
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 }

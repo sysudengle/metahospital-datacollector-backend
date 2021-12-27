@@ -12,14 +12,16 @@ package com.metahospital.datacollector.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
+import com.metahospital.datacollector.common.enums.DoctorStatus;
+import com.metahospital.datacollector.common.enums.UserType;
 import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.*;
-import com.metahospital.datacollector.dao.RedisDao;
-import com.metahospital.datacollector.dao.TestDao;
-import com.metahospital.datacollector.dao.UserDao;
-import com.metahospital.datacollector.dao.WechatAccountDao;
-import com.metahospital.datacollector.dao.entity.User;
-import com.metahospital.datacollector.dao.entity.WechatAccount;
+import com.metahospital.datacollector.dao.*;
+import com.metahospital.datacollector.dao.config.HospitalConfig;
+import com.metahospital.datacollector.dao.data.InnerAccount;
+import com.metahospital.datacollector.dao.data.User;
+import com.metahospital.datacollector.dao.data.UserDoctor;
+import com.metahospital.datacollector.dao.data.WechatAccount;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,12 @@ public class DataServiceImpl implements DataService {
 	private WechatAccountDao wechatAccountDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private InnerAccountDao innerAccountDao;
+	@Autowired
+	private UserDoctorDao userDoctorDao;
+	@Autowired
+	private HospitalConfig hospitalConfig;
 	
     public DataServiceImpl() {
 
@@ -66,10 +74,15 @@ public class DataServiceImpl implements DataService {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR);
         }
         long userId = genUserId();
-	    userDao.replace(new User(userId, "handsome_"+userId));
+	    userDao.replace(new User(userId, "handsome_"+userId, UserType.Patient.getType()));
 	    User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount("aaa", "bbb", "ccc", user.getUserId()));
         WechatAccount wechatAccount = wechatAccountDao.get("aaa");
+	    innerAccountDao.replace(new InnerAccount("aaa", "bbb", user.getUserId()));
+	    InnerAccount innerAccount = innerAccountDao.get("aaa");
+	    userDoctorDao.replace(new UserDoctor(userId, hospitalConfig.getDataList().get(0).getHospitalId(), "handsome_"+userId, DoctorStatus.Unknown.getStatus(), ""));
+	    UserDoctor userDoctor = userDoctorDao.get(userId);
+        
         return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
     }
 
@@ -107,7 +120,7 @@ public class DataServiceImpl implements DataService {
 
         // 首次登陆写入数据库及缓存 TODO 优化下述db操作合并为一个事务操作
         long newUserId = new Random().nextLong(); //暂时先用随机长型代替
-        userDao.replace(new User(newUserId, ""));
+        userDao.replace(new User(newUserId, "", UserType.Patient.getType()));
 
         // mock测试代码，TODEL(allen)
         // User user = userDao.get(newUserId);

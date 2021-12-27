@@ -7,7 +7,7 @@
 
 <!-- namespace属性是名称空间，必须唯一 -->
 <mapper namespace="UserMapper">
-    <resultMap type="com.metahospital.datacollector.dao.entity.User" id="UserResultMap">
+    <resultMap type="com.metahospital.datacollector.dao.data.User" id="UserResultMap">
         <!-- id标签:映射主键属性
              result标签：映射非主键属性
              property属性:实体的属性名
@@ -15,41 +15,17 @@
         -->
         <id property="userId" column="user_id"/>
         <result property="name" column="name"/>
+	    <result property="userType" column="user_type"/>
     </resultMap>
 
     <select id="get" parameterType="map" resultMap="UserResultMap">
-        select user_id,name from user where user_id = #{userId};
+        select user_id, name, user_type from user where user_id = #{userId};
     </select>
 
-<!--	<update id="update" parameterType="map">-->
-<!--		update user set name = #{name} where user_id = #{userId};-->
-<!--    </update>-->
-	<update id="replace" parameterType="com.metahospital.datacollector.dao.entity.User">
+	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.User">
 		replace into user
-		(user_id, name)
+		(user_id, name, user_type)
 		values
-		(#{userId}, #{name});
+		(#{userId}, #{name}, #{userType});
     </update>
-
-<!--	<update id="update" parameterType="map">-->
-<!--		update user set name = #{name} where user_id = #{userId};-->
-<!--    </update>-->
-
-<!--    <select id="getObjectKey" parameterType="map" resultType="string">-->
-<!--        select object_key from user_data_set-->
-<!--        <where>-->
-<!--            id = #{dataId} and del = 0 and data_type = 5-->
-<!--            <if test="userId!=null">-->
-<!--                and user_id = #{userId}-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </select>-->
-
-<!--    <select id="getUserToken" parameterType="map" resultType="string">-->
-<!--        select token from service_token where token = #{token} and del = 0;-->
-<!--    </select>-->
-
-<!--    <update id="updateDataTime" parameterType="map">-->
-<!--        update user_data_set set update_time = #{updateTime} where id = #{dataId}-->
-<!--    </update>-->
 </mapper>

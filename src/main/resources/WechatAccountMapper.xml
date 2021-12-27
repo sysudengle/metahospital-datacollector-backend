@@ -7,12 +7,7 @@
 
 <!-- namespace属性是名称空间，必须唯一 -->
 <mapper namespace="WechatAccountMapper">
-    <resultMap type="com.metahospital.datacollector.dao.entity.WechatAccount" id="WechatAccountResultMap">
-        <!-- id标签:映射主键属性
-             result标签：映射非主键属性
-             property属性:实体的属性名
-             column属性：表的字段名
-        -->
+    <resultMap type="com.metahospital.datacollector.dao.data.WechatAccount" id="WechatAccountResultMap">
         <id property="openId" column="open_id"/>
         <result property="unionId" column="union_id"/>
 	    <result property="sessionKey" column="session_key"/>
@@ -20,36 +15,14 @@
     </resultMap>
 
     <select id="get" parameterType="map" resultMap="WechatAccountResultMap">
-        select open_id,union_id,session_key,user_id from wechat_account where open_id = #{openId};
+        select open_id, union_id, session_key, user_id from wechat_account where open_id = #{openId};
     </select>
 
-	<update id="replace" parameterType="com.metahospital.datacollector.dao.entity.WechatAccount">
+	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.WechatAccount">
 		replace into wechat_account
 		(open_id, union_id, session_key, user_id)
 		values
 		(#{openId}, #{unionId}, #{sessionKey}, #{userId});
     </update>
 
-<!--	<insert id="insert" parameterType="map">-->
-<!--		update user set name = #{name} where user_id = #{userId};-->
-<!--    </insert>-->
-
-
-<!--    <select id="getObjectKey" parameterType="map" resultType="string">-->
-<!--        select object_key from user_data_set-->
-<!--        <where>-->
-<!--            id = #{dataId} and del = 0 and data_type = 5-->
-<!--            <if test="userId!=null">-->
-<!--                and user_id = #{userId}-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </select>-->
-
-<!--    <select id="getUserToken" parameterType="map" resultType="string">-->
-<!--        select token from service_token where token = #{token} and del = 0;-->
-<!--    </select>-->
-
-<!--    <update id="updateDataTime" parameterType="map">-->
-<!--        update user_data_set set update_time = #{updateTime} where id = #{dataId}-->
-<!--    </update>-->
 </mapper>

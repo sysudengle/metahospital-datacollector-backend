@@ -13,7 +13,7 @@ package com.metahospital.datacollector.dao;
 
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
-import com.metahospital.datacollector.dao.data.WechatAccount;
+import com.metahospital.datacollector.dao.data.UserDoctor;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -22,19 +22,18 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class WechatAccountDao {
+public class UserDoctorDao {
 
-    public WechatAccount get(String openId) {
+    public UserDoctor get(long userId) {
         SqlSession sqlSession = MysqlDao.getSqlSession();
         try {
             Map<String, Object> map = new HashMap();
-            map.put("openId", openId);
-            List<WechatAccount> wechatAccounts = sqlSession.selectList("WechatAccountMapper.get", map);
-            // 数据不存在不应该抛出异常，返回空结果
-            if (wechatAccounts == null || wechatAccounts.isEmpty()) {
+            map.put("userId", userId);
+            List<UserDoctor> userDoctors = sqlSession.selectList("UserDoctorMapper.get", map);
+            if (userDoctors == null || userDoctors.isEmpty()) {
                 return null;
             }
-            return wechatAccounts.get(0);
+            return userDoctors.get(0);
         } catch (CollectorException e) {
             throw e;
         } catch (Exception e) {
@@ -45,10 +44,10 @@ public class WechatAccountDao {
         }
     }
     
-    public void replace(WechatAccount wechatAccount) {
+	public void replace(UserDoctor userDoctor) {
 	    SqlSession sqlSession = MysqlDao.getSqlSession();
         try {
-            sqlSession.update("WechatAccountMapper.replace", wechatAccount);
+            sqlSession.update("UserDoctorMapper.replace", userDoctor);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();
