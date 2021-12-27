@@ -23,6 +23,7 @@ import com.metahospital.datacollector.service.DataService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RequestMapping("/api")
@@ -62,6 +63,13 @@ public class DataController {
         return new RestResponse<>(rspDto);
     }
 
+    // 微信获取医院接口
+    @PostMapping(value = "wx/hospitals", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<List<HospitalDto>> getWXHospitals(@RequestBody AuthReqDto authReqDto) {
+        List<HospitalDto> hospitalDtos = dataService.getHospitals();
+        return new RestResponse<>(hospitalDtos);
+    }
+
     // 新建档案接口
     @PostMapping(value = "wx/profile/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<AddWXProfileRspDto> addWXProfile(@RequestBody AddWXProfileReqDto addWXProfileReqDto) {
@@ -90,11 +98,9 @@ public class DataController {
         return new RestResponse<>(rspDto);
     }
 
-
     public void setDataService(DataService dataService) {
         this.dataService = dataService;
     }
-
 
     // todo 判断前端再次post的userid和sessionid是否有效
     //前端需要判断自己有没有userid 和 sessionid

@@ -1,11 +1,14 @@
 package com.metahospital.datacollector.controller.dto;
 
-import com.metahospital.datacollector.common.enums.DepartmentPermission;
+import com.metahospital.datacollector.common.enums.DoctorStatus;
 import lombok.Data;
+
+import java.util.Collections;
+import java.util.List;
 
 @Data
 public class DoctorInfoDto {
-    private long hospitalId = -1; // 医院id
-    private Boolean isValidDoctor = false; // 医生权限是否已生效
-    private DepartmentPermission permission = DepartmentPermission.ALL; // 科室权限类型，全科室/外科/口腔科...
+    private HospitalDto hospital;
+    private DoctorStatus status = DoctorStatus.Unknown;
+    private List<DoctorPermissionDto> permissions = Collections.emptyList(); // 科室权限类型，全科室/外科/口腔科...
 }

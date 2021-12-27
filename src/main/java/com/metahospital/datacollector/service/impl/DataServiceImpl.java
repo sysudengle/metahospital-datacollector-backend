@@ -28,9 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.metahospital.datacollector.service.DataService;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -133,6 +131,13 @@ public class DataServiceImpl implements DataService {
         RegisterWXDoctorRspDto rspDto = new RegisterWXDoctorRspDto();
 
         return rspDto;
+    }
+
+    @Override
+    public List<HospitalDto> getHospitals() {
+        List<HospitalDto> hospitalDtos = new ArrayList<>();
+
+        return hospitalDtos;
     }
 
     @Override

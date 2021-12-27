@@ -9,12 +9,16 @@ package com.metahospital.datacollector.service;
 
 import com.metahospital.datacollector.controller.dto.*;
 
+import java.util.List;
+
 public interface DataService {
     String testMergeData(String id, String name);
 
     AuthRspDto authWX(AuthReqDto authReqDto);
 
     RegisterWXDoctorRspDto registerDoctor(RegisterWXDoctorReqDto registerWXDoctorReqDto);
+
+    List<HospitalDto> getHospitals();
 
     AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto);
     GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
