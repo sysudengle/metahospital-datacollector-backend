@@ -32,6 +32,8 @@ import com.metahospital.datacollector.service.DataService;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DataServiceImpl implements DataService {
@@ -74,13 +76,13 @@ public class DataServiceImpl implements DataService {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR);
         }
         long userId = genUserId();
-	    userDao.replace(new User(userId, "handsome_"+userId, UserType.Patient.getType()));
+	    userDao.replace(new User(userId, "handsome_"+userId, UserType.Patient));
 	    User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount("aaa", "bbb", "ccc", user.getUserId()));
         WechatAccount wechatAccount = wechatAccountDao.get("aaa");
 	    innerAccountDao.replace(new InnerAccount("aaa", "bbb", user.getUserId()));
 	    InnerAccount innerAccount = innerAccountDao.get("aaa");
-	    userDoctorDao.replace(new UserDoctor(userId, hospitalConfig.getDataList().get(0).getHospitalId(), "handsome_"+userId, DoctorStatus.Unknown.getStatus(), ""));
+	    userDoctorDao.replace(new UserDoctor(userId, hospitalConfig.getDataList().get(0).getHospitalId(), "handsome_"+userId, DoctorStatus.Unknown, ""));
 	    UserDoctor userDoctor = userDoctorDao.get(userId);
         
         return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
@@ -120,7 +122,7 @@ public class DataServiceImpl implements DataService {
 
         // 首次登陆写入数据库及缓存 TODO 优化下述db操作合并为一个事务操作
         long newUserId = new Random().nextLong(); //暂时先用随机长型代替
-        userDao.replace(new User(newUserId, "", UserType.Patient.getType()));
+        userDao.replace(new User(newUserId, "", UserType.Patient));
 
         // mock测试代码，TODEL(allen)
         // User user = userDao.get(newUserId);

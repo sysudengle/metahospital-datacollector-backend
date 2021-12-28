@@ -39,7 +39,7 @@ public class LoginServiceImpl implements LoginService {
         String sessionKey = SessionKeyOpenId.getString("session_key");
         long userId = new Random().nextLong();                   //暂时先用随机长型代替
         String name = "lee";                                     //暂时先用字符表示，是否从前端微信用户名入手？？
-        userDao.replace(new User(userId, name + userId, UserType.Patient.getType()));
+        userDao.replace(new User(userId, name + userId, UserType.Patient));
         User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount(openId, unionId, sessionKey, user.getUserId()));
 

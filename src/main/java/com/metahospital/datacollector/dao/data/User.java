@@ -7,15 +7,17 @@
  */
 package com.metahospital.datacollector.dao.data;
 
+import com.metahospital.datacollector.common.enums.UserType;
+
 public class User {
 	private long userId;
 	private String name;
-	private int userType;
+	private UserType userType;
 
 	public User() {
 	}
 
-	public User(long userId, String name, int userType) {
+	public User(long userId, String name, UserType userType) {
 		this.userId = userId;
 		this.name = name;
 		this.userType = userType;
@@ -37,11 +39,11 @@ public class User {
 		this.name = name;
 	}
 
-	public int getUserType() {
+	public UserType getUserType() {
 		return userType;
 	}
 
-	public void setUserType(int userType) {
+	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
 }

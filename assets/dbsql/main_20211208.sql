@@ -25,7 +25,7 @@ ENGINE=InnoDB;
 CREATE TABLE `user` (
     `user_id` BIGINT(20) NOT NULL COMMENT '用户唯一Id',
     `name` VARCHAR(32) NOT NULL COMMENT '用户名' COLLATE 'utf8mb4_unicode_ci',
-    `user_type` INT(10) NOT NULL COMMENT '用户类型,0:doctor,1:patient',
+    `user_type` VARCHAR(50) NOT NULL COMMENT '用户类型' COLLATE 'utf8mb4_unicode_ci',
     PRIMARY KEY (`user_id`) USING BTREE
 )
 COMMENT='用户信息表'
@@ -36,7 +36,7 @@ CREATE TABLE `user_doctor` (
     `user_id` BIGINT(20) NOT NULL COMMENT '用户唯一Id',
     `hospital_id` INT(10) NOT NULL COMMENT '医院id',
     `staff_id` VARCHAR(32) NOT NULL COMMENT '医生工号' COLLATE 'utf8mb4_unicode_ci',
-    `status` INT(10) NOT NULL COMMENT '授权状态,0:Unknown,1:UnderApply,2:Valid,3:Invalid',
+    `status` VARCHAR(50) NOT NULL COMMENT '授权状态' COLLATE 'utf8mb4_unicode_ci',
     `department_ids` VARCHAR(255) NOT NULL COMMENT '授权科室Id数组' COLLATE 'utf8mb4_unicode_ci',
     PRIMARY KEY (`user_id`) USING BTREE
 )

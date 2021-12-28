@@ -1,16 +1,18 @@
 package com.metahospital.datacollector.dao.data;
 
+import com.metahospital.datacollector.common.enums.DoctorStatus;
+
 public class UserDoctor {
 	private long userId;
 	private int hospitalId;
 	private String staffId;
-	private int status;
+	private DoctorStatus status;
 	private String departmentIds;
 
 	public UserDoctor() {
 	}
 
-	public UserDoctor(long userId, int hospitalId, String staffId, int status, String departmentIds) {
+	public UserDoctor(long userId, int hospitalId, String staffId, DoctorStatus status, String departmentIds) {
 		this.userId = userId;
 		this.hospitalId = hospitalId;
 		this.staffId = staffId;
@@ -42,11 +44,7 @@ public class UserDoctor {
 		this.staffId = staffId;
 	}
 
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
+	public void setStatus(DoctorStatus status) {
 		this.status = status;
 	}
 
