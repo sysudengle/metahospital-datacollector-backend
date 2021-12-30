@@ -17,7 +17,10 @@ import com.metahospital.datacollector.common.enums.UserType;
 import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.*;
 import com.metahospital.datacollector.dao.*;
+import com.metahospital.datacollector.dao.config.DepartmentConfig;
+import com.metahospital.datacollector.dao.config.DepartmentConfigData;
 import com.metahospital.datacollector.dao.config.HospitalConfig;
+import com.metahospital.datacollector.dao.config.HospitalConfigData;
 import com.metahospital.datacollector.dao.data.InnerAccount;
 import com.metahospital.datacollector.dao.data.User;
 import com.metahospital.datacollector.dao.data.UserDoctor;
@@ -53,6 +56,8 @@ public class DataServiceImpl implements DataService {
 	private UserDoctorDao userDoctorDao;
 	@Autowired
 	private HospitalConfig hospitalConfig;
+    @Autowired
+    private DepartmentConfig departmentConfig;
 	
     public DataServiceImpl() {
 
@@ -101,38 +106,47 @@ public class DataServiceImpl implements DataService {
         // JSONObject wxJsonRsp = new JSONObject();
         // String openId = "666";
 
-        // cache获取
+        // cache获取redis存的userid
         String cacheKey = RedisDao.PriKeyType.OPENID_TYPE.getPrefix() + openId;
-        String userId = redisDao.get(cacheKey);
-        if (!StringUtils.isEmpty(userId)) {
+        //String userId = redisDao.get(cacheKey);
+        //long userId = genUserId();
+        //!StringUtils.isEmpty(userId)
+
+        /*if (userId != 0) {
             // 回包前重新刷新openid，相当于session的能力
-            setAuthRsp(rspDto, cacheKey, openId, userId);
+            setAuthRsp(rspDto, cacheKey, openId, userId, UserType.Patient);
             LOGGER.info("auth hit cache!");
             return rspDto;
-        }
+        }*/
 
-        // 缓存数据不存在则尝试从db获取
+        //缓存数据不存在则尝试从db获取
         WechatAccount wxAccount = wechatAccountDao.get(openId);
         if (wxAccount != null) {
-            userId = String.valueOf(wxAccount.getUserId());
-            setAuthRsp(rspDto, cacheKey, openId, userId);
+            //userId = String.valueOf(wxAccount.getUserId());
+            //从存在的openid索引userid 再从存在的userid索引usertype
+            //这样成功注册的医生就可以微信登录即为医生。
+            long userId = wxAccount.getUserId();
+            User user = userDao.get(userId);
+            setAuthRsp(rspDto, cacheKey, openId, userId, user.getUserType());
             LOGGER.info("auth hit db!");
             return rspDto;
         }
 
         // 首次登陆写入数据库及缓存 TODO 优化下述db操作合并为一个事务操作
         long newUserId = new Random().nextLong(); //暂时先用随机长型代替
-        userDao.replace(new User(newUserId, "", UserType.Patient));
+        userDao.replace(new User(newUserId, "lee", UserType.Patient));
 
         // mock测试代码，TODEL(allen)
         // User user = userDao.get(newUserId);
         // LOGGER.info("mock test db received: " + user.getUserId());
 
         // 注意要做null判空，不然写db会有问题
-        String unionId = Optional.ofNullable(wxJsonRsp.getString("openid")).orElse("");
+        String unionId = Optional.ofNullable(wxJsonRsp.getString("unionid")).orElse("");
         String sessionKey = Optional.ofNullable(wxJsonRsp.getString("session_key")).orElse("");
+        //db录入
         wechatAccountDao.replace(new WechatAccount(openId, unionId, sessionKey, newUserId));
-        setAuthRsp(rspDto, cacheKey, openId, String.valueOf(newUserId));
+        //redis录入，前端输出
+        setAuthRsp(rspDto, cacheKey, openId, newUserId, UserType.Patient);
 
         // mock测试代码，TODEL(allen)
         // String cacheVal = redisDao.get(cacheKey);
@@ -144,6 +158,52 @@ public class DataServiceImpl implements DataService {
     @Override
     public RegisterWXDoctorRspDto registerDoctor(RegisterWXDoctorReqDto registerWXDoctorReqDto) {
         RegisterWXDoctorRspDto rspDto = new RegisterWXDoctorRspDto();
+        String staffId = registerWXDoctorReqDto.getStaffId();
+        //医院id和医院名字
+        int hospitalId = registerWXDoctorReqDto.getHospitalId();
+        HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
+        String hospitalName = hospitalConfigData.getHospitalName();
+        //判断openId，userId是否配对存在于数据库
+        String openId = registerWXDoctorReqDto.getOpenId();
+        long userId = registerWXDoctorReqDto.getUserId();
+
+        UserDoctor userDoctor = userDoctorDao.get(userId);
+        //已存在注册信息
+        if(userDoctor != null){
+            //假设web端通过申请，注册成功并返回生成账户等信息。
+            if(userDoctor.getStatus() == DoctorStatus.Valid){
+                //虚构用户名和密码
+                InnerAccount innerAccount = new InnerAccount("accName", "password",userId);
+                innerAccountDao.replace(innerAccount);
+                //用update更新db里的usertype,数据库操作还再更新，稍微用复杂一些的方法。
+                User user = userDao.get(userId);
+                String name = user.getName();
+                userDao.replace(new User(userId, name, UserType.Doctor));
+                //假设web端给定科室1
+                int departmentId = 1;
+                DepartmentConfigData departmentConfigData = departmentConfig.get(hospitalId,departmentId);
+                String departmentName = departmentConfigData.getDepartmentName();
+
+                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Doctor, innerAccount.getAccountName(),
+                        innerAccount.getPassword(), hospitalName, departmentName);
+            }
+
+            // 注册失败、无效和代办,均返回审核状态。
+            else{
+                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Patient,
+                        null, null, hospitalName, null);
+            }
+            return rspDto;
+        }
+
+        //不存在注册信息
+        else {
+            //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
+            //医生注册信息录入数据库，并返回待定状态。
+            userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
+            setRegisterWXDoctorRsp(rspDto, DoctorStatus.UnderApply, UserType.Patient,
+                    null, null, hospitalName, null);
+        }
 
         return rspDto;
     }
@@ -184,11 +244,24 @@ public class DataServiceImpl implements DataService {
     }
 
     // 鉴权接口成功回包赋值
-    private void setAuthRsp(AuthRspDto rspDtoRef, String cacheKey, String openId, String userId) {
+    private void setAuthRsp(AuthRspDto rspDtoRef, String cacheKey, String openId, long userId, UserType userType) {
         rspDtoRef.setOpenId(openId);
         rspDtoRef.setUserId(userId);
+        rspDtoRef.setUType(userType);
+        String userIdRedis = String.valueOf(userId);
+        redisDao.set(cacheKey, userIdRedis);
+    }
 
-        redisDao.set(cacheKey, userId);
+    //注册成功回包赋值
+    private void setRegisterWXDoctorRsp(RegisterWXDoctorRspDto rspDtoRef, DoctorStatus doctorStatus,
+                                        UserType userType, String accountName, String password,
+                                        String hospitalName, String departmentName){
+        rspDtoRef.setDoctorStatus(doctorStatus);
+        rspDtoRef.setUType(userType);
+        rspDtoRef.setAccountName(accountName);
+        rspDtoRef.setPassword(password);
+        rspDtoRef.setHospitalName(hospitalName);
+        rspDtoRef.setDepartmentName(departmentName);
     }
 
 	private long genUserId() {
