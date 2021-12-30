@@ -52,6 +52,9 @@
 	    <mapper resource="WechatAccountMapper.xml"/>
 	    <mapper resource="InnerAccountMapper.xml"/>
 	    <mapper resource="UserDoctorMapper.xml"/>
+	    <mapper resource="UserProfileMapper.xml"/>
+	    <mapper resource="ProfileMapper.xml"/>
+	    <mapper resource="BookingMapper.xml"/>
     </mappers>
 
 </configuration>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性是名称空间，必须唯一 -->
+<mapper namespace="ProfileMapper">
+    <resultMap type="com.metahospital.datacollector.dao.data.Profile" id="ProfileResultMap">
+	    <id property="hospitalId" column="hospital_id"/>
+	    <id property="profileId" column="profile_id"/>
+	    <result property="personalID" column="personal_id"/>
+	    <result property="gender" column="gender"/>
+	    <result property="pidAddress" column="pid_address"/>
+	    <result property="homeAddress" column="home_address"/>
+    </resultMap>
+
+    <select id="get" parameterType="map" resultMap="ProfileResultMap">
+        select hospital_id, profile_id, personal_id, gender, pid_address, home_address from profile where hospital_id = #{hospitalId} and profile_id = #{profileId};
+    </select>
+
+	<select id="getByPersonalID" parameterType="map" resultMap="ProfileResultMap">
+        select hospital_id, profile_id, personal_id, gender, pid_address, home_address from profile where hospital_id = #{hospitalId} and personal_id = #{personalID};
+    </select>
+
+	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.Profile">
+		replace into profile
+		(hospital_id, profile_id, personal_id, gender, pid_address, home_address)
+		values
+		(#{hospitalId}, #{profileId}, #{personalID}, #{gender}, #{pidAddress}, #{homeAddress});
+    </update>
+</mapper>

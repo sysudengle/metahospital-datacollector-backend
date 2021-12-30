@@ -44,3 +44,38 @@ COMMENT='医院工号信息'
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB;
 
+CREATE TABLE `user_profile` (
+    `user_id` BIGINT(20) NOT NULL COMMENT '用户唯一Id',
+    `hospital_id` INT(10) NOT NULL COMMENT '医院id',
+    `profile_id` BIGINT(20) NOT NULL COMMENT '档案Id',
+    PRIMARY KEY (`user_id`, `hospital_id`, `profile_id`) USING BTREE
+)
+COMMENT='用户档案表'
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;
+
+CREATE TABLE `profile` (
+    `hospital_id` INT(10) NOT NULL COMMENT '医院id',
+    `profile_id` BIGINT(20) NOT NULL COMMENT '档案Id',
+    `personal_id` VARCHAR(32) NOT NULL COMMENT '身份证号' COLLATE 'utf8mb4_unicode_ci',
+    `gender` VARCHAR(20) NOT NULL COMMENT '性别' COLLATE 'utf8mb4_unicode_ci',
+    `pid_address` VARCHAR(255) NOT NULL COMMENT '身份证地址' COLLATE 'utf8mb4_unicode_ci',
+    `home_address` VARCHAR(255) NOT NULL COMMENT '家庭住址' COLLATE 'utf8mb4_unicode_ci',
+    PRIMARY KEY (`hospital_id`, `profile_id`) USING BTREE,
+    INDEX `hospital_personal` (`hospital_id`, `personal_id`)
+)
+COMMENT='医院档案表'
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;
+
+CREATE TABLE `booking` (
+    `hospital_id` INT(10) NOT NULL COMMENT '医院id',
+    `profile_id` BIGINT(20) NOT NULL COMMENT '档案Id',
+    `booking_id` BIGINT(20) NOT NULL COMMENT '预约Id',
+    `date_time` DATETIME(3) NOT NULL COMMENT '预约时间',
+    `combo_ids` VARCHAR(255) NOT NULL COMMENT '套餐ids' COLLATE 'utf8mb4_unicode_ci',
+    PRIMARY KEY (`hospital_id`, `profile_id`, `booking_id`) USING BTREE
+)
+COMMENT='医院预约表'
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;

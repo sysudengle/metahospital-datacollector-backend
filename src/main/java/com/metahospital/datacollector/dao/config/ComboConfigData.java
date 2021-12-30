@@ -8,19 +8,19 @@ import java.util.List;
  * Created on 2021/12/28.
  */
 @Component
-public class DepartmentConfigData {
+public class ComboConfigData {
 	private int hospitalId;
-	private int departmentId;
-	private String departmentName;
+	private int comboId;
+	private String comboName;
 	private List<Integer> examinationItemIds;
 
-	public DepartmentConfigData() {
+	public ComboConfigData() {
 	}
 
-	public DepartmentConfigData(int hospitalId, int departmentId, String departmentName, List<Integer> examinationItemIds) {
+	public ComboConfigData(int hospitalId, int comboId, String comboName, List<Integer> examinationItemIds) {
 		this.hospitalId = hospitalId;
-		this.departmentId = departmentId;
-		this.departmentName = departmentName;
+		this.comboId = comboId;
+		this.comboName = comboName;
 		this.examinationItemIds = examinationItemIds;
 	}
 
@@ -28,12 +28,12 @@ public class DepartmentConfigData {
 		return hospitalId;
 	}
 
-	public int getDepartmentId() {
-		return departmentId;
+	public int getComboId() {
+		return comboId;
 	}
 
-	public String getDepartmentName() {
-		return departmentName;
+	public String getComboName() {
+		return comboName;
 	}
 
 	public List<Integer> getExaminationItemIds() {

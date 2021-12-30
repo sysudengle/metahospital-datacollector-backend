@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
 import com.metahospital.datacollector.common.enums.DoctorStatus;
+import com.metahospital.datacollector.common.enums.Gender;
 import com.metahospital.datacollector.common.enums.UserType;
 import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.*;
@@ -21,10 +22,7 @@ import com.metahospital.datacollector.dao.config.DepartmentConfig;
 import com.metahospital.datacollector.dao.config.DepartmentConfigData;
 import com.metahospital.datacollector.dao.config.HospitalConfig;
 import com.metahospital.datacollector.dao.config.HospitalConfigData;
-import com.metahospital.datacollector.dao.data.InnerAccount;
-import com.metahospital.datacollector.dao.data.User;
-import com.metahospital.datacollector.dao.data.UserDoctor;
-import com.metahospital.datacollector.dao.data.WechatAccount;
+import com.metahospital.datacollector.dao.data.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +33,6 @@ import com.metahospital.datacollector.service.DataService;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class DataServiceImpl implements DataService {
@@ -54,6 +50,12 @@ public class DataServiceImpl implements DataService {
 	private InnerAccountDao innerAccountDao;
 	@Autowired
 	private UserDoctorDao userDoctorDao;
+	@Autowired
+	private UserProfileDao userProfileDao;
+	@Autowired
+	private ProfileDao profileDao;
+	@Autowired
+	private BookingDao bookingDao;
 	@Autowired
 	private HospitalConfig hospitalConfig;
     @Autowired
@@ -87,8 +89,19 @@ public class DataServiceImpl implements DataService {
         WechatAccount wechatAccount = wechatAccountDao.get("aaa");
 	    innerAccountDao.replace(new InnerAccount("aaa", "bbb", user.getUserId()));
 	    InnerAccount innerAccount = innerAccountDao.get("aaa");
-	    userDoctorDao.replace(new UserDoctor(userId, hospitalConfig.getDataList().get(0).getHospitalId(), "handsome_"+userId, DoctorStatus.Unknown, ""));
+	    int hospitalId = hospitalConfig.getDataList().get(0).getHospitalId();
+	    userDoctorDao.replace(new UserDoctor(userId, hospitalId, "handsome_"+userId, DoctorStatus.Unknown, ""));
 	    UserDoctor userDoctor = userDoctorDao.get(userId);
+	    long profileId = genUserId();
+	    userProfileDao.replace(new UserProfile(userId, hospitalId, profileId));
+	    List<UserProfile> userProfile = userProfileDao.getAll(userId);
+	    String personalID = "1111111000000";
+	    profileDao.replace(new Profile(hospitalId, profileId, personalID, Gender.Male, "abc", "abcd"));
+	    Profile profile = profileDao.get(hospitalId, profileId);
+	    Profile profile1 = profileDao.getByPersonalID(hospitalId, personalID);
+	    long bookingId = genUserId();
+	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), ""));
+	    List<Booking> booking = bookingDao.getAll(hospitalId, profileId);
         
         return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
     }

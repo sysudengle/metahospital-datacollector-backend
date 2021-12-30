@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性是名称空间，必须唯一 -->
+<mapper namespace="UserProfileMapper">
+    <resultMap type="com.metahospital.datacollector.dao.data.UserProfile" id="UserProfileResultMap">
+        <id property="userId" column="user_id"/>
+	    <id property="hospitalId" column="hospital_id"/>
+	    <id property="profileId" column="profile_id"/>
+    </resultMap>
+
+    <select id="getAll" parameterType="map" resultMap="UserProfileResultMap">
+        select user_id, hospital_id, profile_id from user_profile where user_id = #{userId};
+    </select>
+
+	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.UserProfile">
+		replace into user_profile
+		(user_id, hospital_id, profile_id)
+		values
+		(#{userId}, #{hospitalId}, #{profileId});
+    </update>
+</mapper>
