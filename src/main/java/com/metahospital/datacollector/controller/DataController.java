@@ -44,7 +44,7 @@ public class DataController {
     // 微信登陆鉴权接口, 废弃
     @Deprecated
     @PostMapping(value = "/auth_wx", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AuthRspDto> authWXOld(@RequestBody AuthReqDto authReqDto, HttpServletRequest request) {
+    public RestResponse<AuthRspDto> authWXOld(@RequestBody AuthReqDto authReqDto) {
         AuthRspDto rspDto = dataService.authWX(authReqDto);
         return new RestResponse<>(rspDto);
     }

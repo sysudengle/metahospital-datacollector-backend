@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public abstract class BaseDto {
     private String openId;
-    private String userId;
+    private long userId;
 }

@@ -12,7 +12,7 @@ public class AuthRspDto extends BaseDto {
     public AuthRspDto() {
     }
 
-    public AuthRspDto(String openId, String userId) {
+    public AuthRspDto(String openId, long userId) {
         this.setOpenId(openId);
         this.setUserId(userId);
     }

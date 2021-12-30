@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegisterWXDoctorReqDto extends BaseDto {
-    private long hospitalId;
+    private int hospitalId;
     private String staffId;
 }
