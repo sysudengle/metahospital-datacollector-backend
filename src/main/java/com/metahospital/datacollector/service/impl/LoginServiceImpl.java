@@ -43,6 +43,6 @@ public class LoginServiceImpl implements LoginService {
         User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount(openId, unionId, sessionKey, user.getUserId()));
 
-        return new AuthRspDto(openId,String.valueOf(userId));
+        return new AuthRspDto(openId, userId);
     }
 }

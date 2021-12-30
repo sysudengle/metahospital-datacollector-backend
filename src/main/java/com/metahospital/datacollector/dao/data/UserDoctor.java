@@ -6,6 +6,9 @@ public class UserDoctor {
 	private long userId;
 	private int hospitalId;
 	private String staffId;
+
+
+
 	private DoctorStatus status;
 	private String departmentIds;
 
@@ -43,6 +46,8 @@ public class UserDoctor {
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
 	}
+
+	public DoctorStatus getStatus() {return status;}
 
 	public void setStatus(DoctorStatus status) {
 		this.status = status;
