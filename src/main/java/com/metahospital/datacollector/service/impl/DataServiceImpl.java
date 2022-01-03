@@ -224,13 +224,25 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<HospitalDto> getHospitals() {
         List<HospitalDto> hospitalDtos = new ArrayList<>();
+        for(int index = 1; index < 3; index++)
+        {
+            int hospitalId = index;
+            HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
+            hospitalDtos.add(new HospitalDto(hospitalConfigData.getHospitalId(), hospitalConfigData.getHospitalName()));
 
+        }
         return hospitalDtos;
     }
 
     @Override
     public AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto) {
         AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
+        userProfileDao.replace(new UserProfile(addWXProfileReqDto.getUserId(), addWXProfileReqDto.getProfileInfoDto().getHospitalId(), addWXProfileReqDto.getProfileInfoDto().getProfileId()));
+
+        profileDao.replace(new Profile(addWXProfileReqDto.getProfileInfoDto().getHospitalId(),
+                addWXProfileReqDto.getProfileInfoDto().getProfileId(), addWXProfileReqDto.getProfileInfoDto().getPersonalID(),
+                addWXProfileReqDto.getProfileInfoDto().getGender(), addWXProfileReqDto.getProfileInfoDto().getPidAddress(),
+                addWXProfileReqDto.getProfileInfoDto().getHomeAddress()));
 
         return rspDto;
     }
@@ -238,7 +250,22 @@ public class DataServiceImpl implements DataService {
     @Override
     public GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
         GetWXProfilesRspDto rspDto = new GetWXProfilesRspDto();
+        List<UserProfile> userProfiles = userProfileDao.getAll(getWXProfilesReqDto.getUserId());
 
+        //我需要以下列表类的内容作为返回值
+        List<ProfileInfoDto> profileInfoDtos = new ArrayList<>();
+
+        for(int index = 1; index < userProfiles.size() + 1; index++){
+            long profileId = userProfiles.get(index).getProfileId();
+            int hospitalId = userProfiles.get(index).getHospitalId();
+            Profile profile = profileDao.get(hospitalId,profileId);
+            profileInfoDtos.add(new ProfileInfoDto(profile.getProfileId(), profile.getHospitalId(),
+                    profile.getPersonalID(), profile.getGender(), profile.getPidAddress(),
+                    profile.getHomeAddress()));
+        }
+
+
+        rspDto.setProfiles(profileInfoDtos);
         return rspDto;
     }
 
