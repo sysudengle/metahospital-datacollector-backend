@@ -64,8 +64,8 @@ public class DataController {
     }
 
     // 微信获取医院接口
-    @PostMapping(value = "wx/hospitals", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<List<HospitalDto>> getWXHospitals(@RequestBody AuthReqDto authReqDto) {
+    @GetMapping(value = "wx/hospitals", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<List<HospitalDto>> getWXHospitals() {
         List<HospitalDto> hospitalDtos = dataService.getHospitals();
         return new RestResponse<>(hospitalDtos);
     }
