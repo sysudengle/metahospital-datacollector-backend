@@ -255,7 +255,7 @@ public class DataServiceImpl implements DataService {
         //我需要以下列表类的内容作为返回值
         List<ProfileInfoDto> profileInfoDtos = new ArrayList<>();
 
-        for(int index = 1; index < userProfiles.size() + 1; index++){
+        for(int index = 0; index < userProfiles.size(); index++){
             long profileId = userProfiles.get(index).getProfileId();
             int hospitalId = userProfiles.get(index).getHospitalId();
             Profile profile = profileDao.get(hospitalId,profileId);
