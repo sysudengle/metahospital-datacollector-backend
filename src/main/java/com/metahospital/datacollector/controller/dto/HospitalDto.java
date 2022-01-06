@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class HospitalDto extends BaseDto{
+public class HospitalDto {
     private int hospitalId = -1; // 医院id
     private String name; // 医院名称
 }
