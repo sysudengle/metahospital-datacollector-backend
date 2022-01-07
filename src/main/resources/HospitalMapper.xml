@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性是名称空间，必须唯一 -->
+<mapper namespace="HospitalMapper">
+    <resultMap type="com.metahospital.datacollector.dao.data.Hospital" id="HospitalResultMap">
+        <id property="hospitalId" column="hospital_id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="get" parameterType="map" resultMap="HospitalResultMap">
+        select hospital_id, name from hospital;
+    </select>
+</mapper>

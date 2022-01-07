@@ -60,6 +60,9 @@ public class DataServiceImpl implements DataService {
 	private HospitalConfig hospitalConfig;
     @Autowired
     private DepartmentConfig departmentConfig;
+
+    @Autowired
+    private ScheduleServiceImpl scheduleService;
 	
     public DataServiceImpl() {
 
@@ -177,46 +180,78 @@ public class DataServiceImpl implements DataService {
         HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
         String hospitalName = hospitalConfigData.getHospitalName();
         //判断openId，userId是否配对存在于数据库
-        String openId = registerWXDoctorReqDto.getOpenId();
         long userId = registerWXDoctorReqDto.getUserId();
 
         UserDoctor userDoctor = userDoctorDao.get(userId);
-        //已存在注册信息
-        if(userDoctor != null){
-            //假设web端通过申请，注册成功并返回生成账户等信息。
-            if(userDoctor.getStatus() == DoctorStatus.Valid){
-                //虚构用户名和密码
-                InnerAccount innerAccount = new InnerAccount("accName", "password",userId);
-                innerAccountDao.replace(innerAccount);
-                //用update更新db里的usertype,数据库操作还再更新，稍微用复杂一些的方法。
-                User user = userDao.get(userId);
-                String name = user.getName();
-                userDao.replace(new User(userId, name, UserType.Doctor));
-                //假设web端给定科室1
-                int departmentId = 1;
-                DepartmentConfigData departmentConfigData = departmentConfig.get(hospitalId,departmentId);
-                String departmentName = departmentConfigData.getDepartmentName();
+        // TOREVIEW 已存在注册信息,就不该使用该接口，通过异常码给到前端操作有误
+        if (userDoctor == null) {
+            throw new CollectorException(RestCode.DOCTOR_ALREADY_REGISTER_ERR);
+        }
 
-                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Doctor, innerAccount.getAccountName(),
-                        innerAccount.getPassword(), hospitalName, departmentName);
-            }
+        //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
+        //医生注册信息录入数据库，并返回待定状态。
+        userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
 
-            // 注册失败、无效和代办,均返回审核状态。
-            else{
-                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Patient,
-                        null, null, hospitalName, null);
-            }
+        // TOREVIEW 减少if的嵌套，不引入圈复杂度
+//        if(userDoctor != null){
+//            //假设web端通过申请，注册成功并返回生成账户等信息。
+//            if(userDoctor.getStatus() == DoctorStatus.Valid){
+//                // TOREVIEW 如果存在这个用户的信息，不需要再创建账号密码，这块先注释后续再删除
+//                //虚构用户名和密码
+//                // InnerAccount innerAccount = new InnerAccount("accName", "password", userId);
+//                // innerAccountDao.replace(innerAccount);
+//                //用update更新db里的usertype,数据库操作还再更新，稍微用复杂一些的方法。
+//                User user = userDao.get(userId);
+//                String name = user.getName();
+//                userDao.replace(new User(userId, name, UserType.Doctor));
+//                //假设web端给定科室1
+//                int departmentId = 1;
+//                DepartmentConfigData departmentConfigData = departmentConfig.get(hospitalId,departmentId);
+//                String departmentName = departmentConfigData.getDepartmentName();
+//
+//                // setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Doctor, innerAccount.getAccountName(),
+//                //        innerAccount.getPassword(), hospitalName, departmentName);
+//            }
+//
+//            // 注册失败、无效和代办,均返回审核状态。
+//            else{
+//                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Patient,
+//                        null, null, hospitalName, null);
+//            }
+//            return rspDto;
+//        }
+//
+//        //不存在注册信息
+//        else {
+//            //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
+//            //医生注册信息录入数据库，并返回待定状态。
+//            userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
+//            setRegisterWXDoctorRsp(rspDto, DoctorStatus.UnderApply, UserType.Patient,
+//                    null, null, hospitalName, null);
+//        }
+
+        return rspDto;
+    }
+
+    @Override
+    public GetWXDoctorRspDto getDoctor(GetWXDoctorReqDto getWXDoctorReqDto) {
+        // TOREVIEW
+        GetWXDoctorRspDto rspDto = new GetWXDoctorRspDto();
+        long userId = getWXDoctorReqDto.getUserId();
+
+        UserDoctor userDoctor = userDoctorDao.get(userId);
+        if (userDoctor == null) {
+            rspDto.setExists(false);
+
             return rspDto;
         }
 
-        //不存在注册信息
-        else {
-            //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
-            //医生注册信息录入数据库，并返回待定状态。
-            userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
-            setRegisterWXDoctorRsp(rspDto, DoctorStatus.UnderApply, UserType.Patient,
-                    null, null, hospitalName, null);
-        }
+        rspDto.setExists(true);
+        rspDto.setDoctorStatus(userDoctor.getStatus());
+        rspDto.setHospitalId(userDoctor.getHospitalId());
+        Hospital hospital = scheduleService.getHospital(userDoctor.getHospitalId());
+        rspDto.setHospitalName(hospital.getName());
+        // TODO(alllen)
 
         return rspDto;
     }
@@ -239,10 +274,12 @@ public class DataServiceImpl implements DataService {
         AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
         userProfileDao.replace(new UserProfile(addWXProfileReqDto.getUserId(), addWXProfileReqDto.getProfileInfoDto().getHospitalId(), addWXProfileReqDto.getProfileInfoDto().getProfileId()));
 
-        profileDao.replace(new Profile(addWXProfileReqDto.getProfileInfoDto().getHospitalId(),
-                addWXProfileReqDto.getProfileInfoDto().getProfileId(), addWXProfileReqDto.getProfileInfoDto().getPersonalID(),
-                addWXProfileReqDto.getProfileInfoDto().getGender(), addWXProfileReqDto.getProfileInfoDto().getPidAddress(),
-                addWXProfileReqDto.getProfileInfoDto().getHomeAddress()));
+        // TOREVIEW a) 减少重复代码，可引用 b) 后续连续db操作考虑用事务处理
+        ProfileInfoDto profile = addWXProfileReqDto.getProfileInfoDto();
+        profileDao.replace(new Profile(profile.getHospitalId(),
+                profile.getProfileId(), profile.getPersonalID(),
+                profile.getGender(), profile.getPidAddress(),
+                profile.getHomeAddress()));
 
         return rspDto;
     }
@@ -254,16 +291,15 @@ public class DataServiceImpl implements DataService {
 
         //我需要以下列表类的内容作为返回值
         List<ProfileInfoDto> profileInfoDtos = new ArrayList<>();
-
-        for(int index = 0; index < userProfiles.size(); index++){
-            long profileId = userProfiles.get(index).getProfileId();
-            int hospitalId = userProfiles.get(index).getHospitalId();
+        // TOREVIEW 小范围下标直接用i即可
+        for(int i = 0; i < userProfiles.size(); i++){
+            long profileId = userProfiles.get(i).getProfileId();
+            int hospitalId = userProfiles.get(i).getHospitalId();
             Profile profile = profileDao.get(hospitalId,profileId);
             profileInfoDtos.add(new ProfileInfoDto(profile.getProfileId(), profile.getHospitalId(),
                     profile.getPersonalID(), profile.getGender(), profile.getPidAddress(),
                     profile.getHomeAddress()));
         }
-
 
         rspDto.setProfiles(profileInfoDtos);
         return rspDto;
@@ -292,17 +328,17 @@ public class DataServiceImpl implements DataService {
         redisDao.set(cacheKey, userIdRedis);
     }
 
-    //注册成功回包赋值
-    private void setRegisterWXDoctorRsp(RegisterWXDoctorRspDto rspDtoRef, DoctorStatus doctorStatus,
-                                        UserType userType, String accountName, String password,
-                                        String hospitalName, String departmentName){
-        rspDtoRef.setDoctorStatus(doctorStatus);
-        rspDtoRef.setUType(userType);
-        rspDtoRef.setAccountName(accountName);
-        rspDtoRef.setPassword(password);
-        rspDtoRef.setHospitalName(hospitalName);
-        rspDtoRef.setDepartmentName(departmentName);
-    }
+//    //注册成功回包赋值
+//    private void setRegisterWXDoctorRsp(RegisterWXDoctorRspDto rspDtoRef, DoctorStatus doctorStatus,
+//                                        UserType userType, String accountName, String password,
+//                                        String hospitalName, String departmentName){
+//        rspDtoRef.setDoctorStatus(doctorStatus);
+//        rspDtoRef.setUType(userType);
+//        rspDtoRef.setAccountName(accountName);
+//        rspDtoRef.setPassword(password);
+//        rspDtoRef.setHospitalName(hospitalName);
+//        rspDtoRef.setDepartmentName(departmentName);
+//    }
 
 	private long genUserId() {
 		// todo why 这个随便写的，有问题的，需要添加一个id生成工具

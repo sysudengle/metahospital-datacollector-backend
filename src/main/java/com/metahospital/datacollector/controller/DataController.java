@@ -63,8 +63,15 @@ public class DataController {
         return new RestResponse<>(rspDto);
     }
 
+    // 微信医生获取接口
+    @PostMapping(value = "wx/doctor", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<GetWXDoctorRspDto>  getDoctorWX(@RequestBody GetWXDoctorReqDto getDoctorReqDto) {
+        GetWXDoctorRspDto rspDto = dataService.getDoctor(getDoctorReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
     // 微信获取医院接口
-    @GetMapping(value = "wx/hospitals", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "wx/hospitals", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public RestResponse<List<HospitalDto>> getWXHospitals() {
         List<HospitalDto> hospitalDtos = dataService.getHospitals();
         return new RestResponse<>(hospitalDtos);

@@ -16,12 +16,14 @@ public enum RestCode {
     SUCCESS(200),
     // 400~499 返回码区间表示客户端错误
     PARAM_INVALID_ERR(400),
+    DOCTOR_ALREADY_REGISTER_ERR(401),
 
     // 500～600 返回码区间表示服务端错误
     DB_REQ_TIMEOUT_ERR(500),
     REDIS_REQ_ERR(501),
     LOGIC_PROCESS_ERR(502),
-    WECHAT_OPENID_INVALID_ERR(503);
+    WECHAT_OPENID_INVALID_ERR(503),
+    HOSPITAL_INVALID_ERR(504);
 
     private final int value;
     RestCode(int value) {

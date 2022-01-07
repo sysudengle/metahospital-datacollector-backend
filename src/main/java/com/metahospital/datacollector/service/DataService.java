@@ -17,6 +17,7 @@ public interface DataService {
     AuthRspDto authWX(AuthReqDto authReqDto);
 
     RegisterWXDoctorRspDto registerDoctor(RegisterWXDoctorReqDto registerWXDoctorReqDto);
+    GetWXDoctorRspDto getDoctor(GetWXDoctorReqDto getWXDoctorReqDto);
 
     List<HospitalDto> getHospitals();
 

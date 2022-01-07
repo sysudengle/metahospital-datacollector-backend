@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "9db881e8-010a-4907-9d48-d3ec0fb24a91",
+		"name": "医院项目",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "体检人登录",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"wechatJsCode\": \"aaaa\"\r\n}"
+				},
+				"url": {
+					"raw": "http://42.193.190.7:8080/api/wx/auth",
+					"protocol": "http",
+					"host": [
+						"42",
+						"193",
+						"190",
+						"7"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "医生登录",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hospitalId\": 1,\n    \"staffId\": \"99999\",\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://42.193.190.7:8080/api/wx/doctor/register",
+					"protocol": "http",
+					"host": [
+						"42",
+						"193",
+						"190",
+						"7"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"doctor",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取医院信息",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://42.193.190.7:8080/api/wx/hospitals",
+					"protocol": "http",
+					"host": [
+						"42",
+						"193",
+						"190",
+						"7"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"hospitals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增档案",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"profileInfoDto\": {\r\n        \"profileId\": 1,\r\n        \"hospitalId\": 1,\r\n        \"personalID\": 1,\r\n        \"gender\": \"Male\",\r\n        \"pidAddress\": \"aaa\",\r\n        \"homeAddress\": \"bbb\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://42.193.190.7:8080/api/wx/profile/add",
+					"protocol": "http",
+					"host": [
+						"42",
+						"193",
+						"190",
+						"7"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"profile",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "查看档案",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"url": {
+					"raw": "http://42.193.190.7:8080/api/wx/profiles",
+					"protocol": "http",
+					"host": [
+						"42",
+						"193",
+						"190",
+						"7"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"profiles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "获取用户医生状态信息",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=UTF-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/wx/doctor",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"wx",
+						"doctor"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

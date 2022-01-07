@@ -79,3 +79,12 @@ CREATE TABLE `booking` (
 COMMENT='医院预约表'
 COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB;
+
+CREATE TABLE `hospital` (
+    `hospital_id` INT(10) NOT NULL COMMENT '医院id',
+    `name` VARCHAR(255) NOT NULL COMMENT '医院名称' COLLATE 'utf8mb4_unicode_ci',
+    PRIMARY KEY (`hospital_id`) USING BTREE
+)
+COMMENT='医院表'
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB;
