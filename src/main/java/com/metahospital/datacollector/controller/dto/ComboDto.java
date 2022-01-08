@@ -1,9 +1,11 @@
 package com.metahospital.datacollector.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ComboDto {
-    private long comboId;
+    private int comboId;
     private String name;
 }
