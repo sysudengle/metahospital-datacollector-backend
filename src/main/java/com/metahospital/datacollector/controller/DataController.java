@@ -23,6 +23,7 @@ import com.metahospital.datacollector.service.DataService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -102,6 +103,31 @@ public class DataController {
     @PostMapping(value = "/wx/bookings", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<GetWXBookingsRspDto> getBooks(@RequestBody GetWXBookingsReqDto getWXBookingsReqDto) {
         GetWXBookingsRspDto rspDto = dataService.getBookings(getWXBookingsReqDto);
+        return new RestResponse<>(rspDto);
+    }
+
+    // 根据套餐id获取所有科室信息接口
+    @PostMapping(value = "/wx/booking/departments", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<List<DepartmentDto> > getDepartments(@RequestBody GetWXDepartmentsReqDto getWXBookingsReqDto) {
+        List<DepartmentDto> rspDto = new ArrayList<>();
+        return new RestResponse<>(rspDto);
+    }
+
+    // 根据套餐id获取所有科室信息接口
+    @PostMapping(value = "/wx/booking/department/items", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<List<BaseItemDto> > getItems(@RequestBody GetWXItemsReqDto getWXItemsReqDto) {
+        List<BaseItemDto> rspDto = new ArrayList<>();
+        SelectionItemDto dto1 = new SelectionItemDto();
+        rspDto.add(dto1);
+        StringItemDto dto2 = new StringItemDto();
+        rspDto.add(dto2);
+        return new RestResponse<>(rspDto);
+    }
+
+    // 根据套餐id获取所有科室信息接口
+    @PostMapping(value = "/wx/booking/department/items/upsert", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<UpsertWXItemRspDto> upsertItems(@RequestBody UpsertWXItemReqDto upsertWXItemReqDto) {
+        UpsertWXItemRspDto rspDto = new UpsertWXItemRspDto();
         return new RestResponse<>(rspDto);
     }
 
