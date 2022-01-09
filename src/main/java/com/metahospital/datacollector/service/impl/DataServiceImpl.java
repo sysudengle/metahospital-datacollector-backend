@@ -18,10 +18,7 @@ import com.metahospital.datacollector.common.enums.UserType;
 import com.metahospital.datacollector.common.util.WechatUtil;
 import com.metahospital.datacollector.controller.dto.*;
 import com.metahospital.datacollector.dao.*;
-import com.metahospital.datacollector.dao.config.DepartmentConfig;
-import com.metahospital.datacollector.dao.config.DepartmentConfigData;
-import com.metahospital.datacollector.dao.config.HospitalConfig;
-import com.metahospital.datacollector.dao.config.HospitalConfigData;
+import com.metahospital.datacollector.dao.config.*;
 import com.metahospital.datacollector.dao.data.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -60,7 +57,8 @@ public class DataServiceImpl implements DataService {
 	private HospitalConfig hospitalConfig;
     @Autowired
     private DepartmentConfig departmentConfig;
-
+    @Autowired
+    private  ComboConfig comboConfig;
     @Autowired
     private ScheduleServiceImpl scheduleService;
 	
@@ -309,12 +307,58 @@ public class DataServiceImpl implements DataService {
     public AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto) {
         AddWXBookingRspDto rspDto = new AddWXBookingRspDto();
 
+        long profileId = addWXBookingReqDto.getProfileId();
+        int hospitalId = addWXBookingReqDto.getHospitalId();
+        long bookingId = addWXBookingReqDto.getBookingInfoDto().getBookingId();
+        Date dateTime = addWXBookingReqDto.getBookingInfoDto().getDateTime();
+        List<ComboDto> comboDtos = addWXBookingReqDto.getBookingInfoDto().getComboDtos();
+
+
+        //前端是id和name是确定都传吗？需不需要只穿id 套餐名严格用数据库索引
+        String comboId = "#";
+        String comboName = "#";
+
+        for (int i = 0; i < comboDtos.size(); i++)
+        {
+            //感觉需要判空，和判误码，但我不知道该如何加
+            comboId =  comboId + comboDtos.get(i).getComboId() + "#";
+            comboName = comboName + comboDtos.get(i).getName() + "#";
+        }
+
+        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId));
+        rspDto.setHospitalId(hospitalId);
+        rspDto.setProfileId(profileId);
+
         return rspDto;
     }
 
     @Override
     public GetWXBookingsRspDto getBookings(GetWXBookingsReqDto getAppointmentRspDto) {
         GetWXBookingsRspDto rspDto = new GetWXBookingsRspDto();
+        long profileId = getAppointmentRspDto.getProfileId();
+        int hospitalId = getAppointmentRspDto.getHospitalId();
+        List<Booking> bookings = bookingDao.getAll(hospitalId, profileId);
+        List<BookingInfoDto> bookingInfoDtos = new ArrayList<>();
+
+
+        for(int i = 0; i < bookings.size(); i++){
+            //分割字符串，提取comboid
+            String[] sourceStrArray = bookings.get(i).getComboIds().split("#");
+            List<ComboDto> comboDtos = new ArrayList<>();
+            for(int j = 1; j < sourceStrArray.length; j++)
+            {
+                int comboId = Integer.parseInt(sourceStrArray[j]);
+                ComboConfigData comboConfigData = comboConfig.get(hospitalId, comboId);
+                comboDtos.add(new ComboDto(comboId, comboConfigData.getComboName()));
+            }
+            long bookingId = bookings.get(i).getBookingId();
+            Date dateTime = bookings.get(i).getDateTime();
+
+            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos));
+
+        }
+
+        rspDto.setBookings(bookingInfoDtos);
 
         return rspDto;
     }
