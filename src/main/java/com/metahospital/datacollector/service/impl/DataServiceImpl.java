@@ -79,7 +79,7 @@ public class DataServiceImpl implements DataService {
         Map<String, String> retMap = redisDao.hGetAll(hashMapId);
         LOGGER.info("Redis hash read:" + retMap.toString());
 
-        // TOREVIEW 异常处理
+        // REVIEWED 异常处理
         if (id == null || id.isEmpty()) {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR);
         }
@@ -181,7 +181,7 @@ public class DataServiceImpl implements DataService {
         long userId = registerWXDoctorReqDto.getUserId();
 
         UserDoctor userDoctor = userDoctorDao.get(userId);
-        // TOREVIEW 已存在注册信息,就不该使用该接口，通过异常码给到前端操作有误
+        // REVIEWED 已存在注册信息,就不该使用该接口，通过异常码给到前端操作有误
         if (userDoctor == null) {
             throw new CollectorException(RestCode.DOCTOR_ALREADY_REGISTER_ERR);
         }
@@ -233,7 +233,7 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public GetWXDoctorRspDto getDoctor(GetWXDoctorReqDto getWXDoctorReqDto) {
-        // TOREVIEW
+        // REVIEWED
         GetWXDoctorRspDto rspDto = new GetWXDoctorRspDto();
         long userId = getWXDoctorReqDto.getUserId();
 
@@ -272,7 +272,7 @@ public class DataServiceImpl implements DataService {
         AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
         userProfileDao.replace(new UserProfile(addWXProfileReqDto.getUserId(), addWXProfileReqDto.getProfileInfoDto().getHospitalId(), addWXProfileReqDto.getProfileInfoDto().getProfileId()));
 
-        // TOREVIEW a) 减少重复代码，可引用 b) 后续连续db操作考虑用事务处理
+        // REVIEWED a) 减少重复代码，可引用 b) 后续连续db操作考虑用事务处理
         ProfileInfoDto profile = addWXProfileReqDto.getProfileInfoDto();
         profileDao.replace(new Profile(profile.getHospitalId(),
                 profile.getProfileId(), profile.getPersonalID(),
@@ -289,7 +289,7 @@ public class DataServiceImpl implements DataService {
 
         //我需要以下列表类的内容作为返回值
         List<ProfileInfoDto> profileInfoDtos = new ArrayList<>();
-        // TOREVIEW 小范围下标直接用i即可
+        // REVIEWED 小范围下标直接用i即可
         for(int i = 0; i < userProfiles.size(); i++){
             long profileId = userProfiles.get(i).getProfileId();
             int hospitalId = userProfiles.get(i).getHospitalId();
