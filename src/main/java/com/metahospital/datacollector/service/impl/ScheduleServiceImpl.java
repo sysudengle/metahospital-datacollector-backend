@@ -41,7 +41,7 @@ public class ScheduleServiceImpl {
             hospitalMap.put(hospital.getHospitalId(), hospital);
         }
 
-        System.out.println("load hospitals with size: " + hospitalMap.size());
+        //System.out.println("load hospitals with size: " + hospitalMap.size());
     }
 
     public Hospital getHospital(int hospitalId) {
