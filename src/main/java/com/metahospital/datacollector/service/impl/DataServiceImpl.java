@@ -61,6 +61,8 @@ public class DataServiceImpl implements DataService {
     private  ComboConfig comboConfig;
     @Autowired
     private ScheduleServiceImpl scheduleService;
+    @Autowired
+    private HospitalDao hospitalDao;
 	
     public DataServiceImpl() {
 
@@ -257,11 +259,11 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<HospitalDto> getHospitals() {
         List<HospitalDto> hospitalDtos = new ArrayList<>();
-        for(int index = 1; index < 3; index++)
+        List<Hospital> hospitals = hospitalDao.get();
+        for(int index = 0; index < hospitals.size(); index++)
         {
             int hospitalId = index;
-            HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
-            hospitalDtos.add(new HospitalDto(hospitalConfigData.getHospitalId(), hospitalConfigData.getHospitalName()));
+            hospitalDtos.add(new HospitalDto(hospitals.get(hospitalId).getHospitalId(), hospitals.get(hospitalId).getName()));
 
         }
         return hospitalDtos;
