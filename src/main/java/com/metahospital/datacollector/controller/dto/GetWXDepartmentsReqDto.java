@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class GetWXDepartmentsReqDto extends BaseDto {
-    private long bookingId;
+    //TODO
+    //套餐与items表 做完再索引
+    //private long bookingId;
 }
