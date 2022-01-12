@@ -56,6 +56,7 @@
 	    <mapper resource="ProfileMapper.xml"/>
 	    <mapper resource="BookingMapper.xml"/>
         <mapper resource="HospitalMapper.xml"/>
+        <mapper resource="DepartmentMapper.xml"/>
     </mappers>
 
 </configuration>

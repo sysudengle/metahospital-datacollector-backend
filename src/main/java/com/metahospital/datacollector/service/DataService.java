@@ -26,4 +26,5 @@ public interface DataService {
 
     AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto);
     GetWXBookingsRspDto getBookings(GetWXBookingsReqDto getAppointmentRspDto);
+    List<DepartmentDto> getDepartments(GetWXDepartmentsReqDto getWXDepartmentsReqDto);
 }
