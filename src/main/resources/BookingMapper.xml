@@ -13,16 +13,17 @@
 	    <id property="bookingId" column="booking_id"/>
 	    <result property="dateTime" column="date_time"/>
 	    <result property="comboIds" column="combo_ids"/>
+		<result property="bookingStatus" column="booking_status"/>
     </resultMap>
 
     <select id="getAll" parameterType="map" resultMap="BookingResultMap">
-        select hospital_id, profile_id, booking_id, date_time, combo_ids from booking where hospital_id = #{hospitalId} and profile_id = #{profileId};
+        select hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status from booking where hospital_id = #{hospitalId} and profile_id = #{profileId};
     </select>
 
 	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.Booking">
 		replace into booking
-		(hospital_id, profile_id, booking_id, date_time, combo_ids)
+		(hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status)
 		values
-		(#{hospitalId}, #{profileId}, #{bookingId}, #{dateTime}, #{comboIds});
+		(#{hospitalId}, #{profileId}, #{bookingId}, #{dateTime}, #{comboIds}, #{bookingStatus});
     </update>
 </mapper>

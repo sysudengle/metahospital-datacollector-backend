@@ -7,6 +7,7 @@
  */
 package com.metahospital.datacollector.dao.data;
 
+import com.metahospital.datacollector.common.enums.BookingStatus;
 import org.joda.time.DateTime;
 
 import java.util.Date;
@@ -17,16 +18,18 @@ public class Booking {
 	private long bookingId;
 	private Date dateTime;
 	private String comboIds;
+	private BookingStatus bookingStatus;
 
 	public Booking() {
 	}
 
-	public Booking(int hospitalId, long profileId, long bookingId, Date dateTime, String comboIds) {
+	public Booking(int hospitalId, long profileId, long bookingId, Date dateTime, String comboIds, BookingStatus bookingStatus) {
 		this.hospitalId = hospitalId;
 		this.profileId = profileId;
 		this.bookingId = bookingId;
 		this.dateTime = dateTime;
 		this.comboIds = comboIds;
+		this.bookingStatus = bookingStatus;
 	}
 
 	public int getHospitalId() {
@@ -68,4 +71,8 @@ public class Booking {
 	public void setComboIds(String comboIds) {
 		this.comboIds = comboIds;
 	}
+
+	public BookingStatus getBookingStatus() {return bookingStatus;}
+
+	public void setBookingStatus(BookingStatus bookingStatus) {this.bookingStatus = bookingStatus;}
 }
