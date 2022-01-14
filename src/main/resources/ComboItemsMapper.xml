@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2021 MetaHospital, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace属性是名称空间，必须唯一 -->
+<mapper namespace="ComboItemsMapper">
+    <resultMap type="com.metahospital.datacollector.dao.data.ComboItems" id="ComboItemsResultMap">
+        <id property="comboId" column="combo_id"/>
+        <result property="itemIds" column="item_ids"/>
+    </resultMap>
+
+    <select id="getAll" parameterType="map" resultMap="ComboItemsResultMap">
+        select combo_id, item_ids from combo_item;
+    </select>
+
+    <select id="get" parameterType="map" resultMap="ComboItemsResultMap">
+        select combo_id, item_ids from combp where combo_id = #{comboId};
+    </select>
+
+</mapper>

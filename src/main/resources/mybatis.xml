@@ -57,6 +57,9 @@
 	    <mapper resource="BookingMapper.xml"/>
         <mapper resource="HospitalMapper.xml"/>
         <mapper resource="DepartmentMapper.xml"/>
+        <mapper resource="ComboMapper.xml"/>
+        <mapper resource="ComboItemsMapper.xml"/>
+
     </mappers>
 
 </configuration>

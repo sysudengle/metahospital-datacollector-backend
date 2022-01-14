@@ -66,6 +66,10 @@ public class DataServiceImpl implements DataService {
     private HospitalDao hospitalDao;
     @Autowired
     private DepartmentDao departmentDao;
+    @Autowired
+    private ComboDao comboDao;
+    @Autowired
+    private ComboItemsDao comboItemsDao;
 	
     public DataServiceImpl() {
 
@@ -108,8 +112,9 @@ public class DataServiceImpl implements DataService {
 	    long bookingId = genUserId();
 	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), "", BookingStatus.Processing));
 	    List<Booking> booking = bookingDao.getAll(hospitalId, profileId);
+        Booking booking1 = bookingDao.getComboIds(11112);
         
-        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
+        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName() + "|" + booking1.getComboIds();
     }
 
     @Override
@@ -353,8 +358,8 @@ public class DataServiceImpl implements DataService {
             for(int j = 1; j < sourceStrArray.length; j++)
             {
                 int comboId = Integer.parseInt(sourceStrArray[j]);
-                ComboConfigData comboConfigData = comboConfig.get(hospitalId, comboId);
-                comboDtos.add(new ComboDto(comboId, comboConfigData.getComboName()));
+                Combo combo = comboDao.get(comboId);
+                comboDtos.add(new ComboDto(comboId, combo.getComboName()));
             }
             long bookingId = bookings.get(i).getBookingId();
             Date dateTime = bookings.get(i).getDateTime();
