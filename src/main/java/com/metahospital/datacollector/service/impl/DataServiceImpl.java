@@ -12,6 +12,7 @@ package com.metahospital.datacollector.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
+import com.metahospital.datacollector.common.enums.BookingStatus;
 import com.metahospital.datacollector.common.enums.DoctorStatus;
 import com.metahospital.datacollector.common.enums.Gender;
 import com.metahospital.datacollector.common.enums.UserType;
@@ -61,6 +62,14 @@ public class DataServiceImpl implements DataService {
     private  ComboConfig comboConfig;
     @Autowired
     private ScheduleServiceImpl scheduleService;
+    @Autowired
+    private HospitalDao hospitalDao;
+    @Autowired
+    private DepartmentDao departmentDao;
+    @Autowired
+    private ComboDao comboDao;
+    @Autowired
+    private ComboItemsDao comboItemsDao;
 	
     public DataServiceImpl() {
 
@@ -101,10 +110,11 @@ public class DataServiceImpl implements DataService {
 	    Profile profile = profileDao.get(hospitalId, profileId);
 	    Profile profile1 = profileDao.getByPersonalID(hospitalId, personalID);
 	    long bookingId = genUserId();
-	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), ""));
+	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), "", BookingStatus.Processing));
 	    List<Booking> booking = bookingDao.getAll(hospitalId, profileId);
+        Booking booking1 = bookingDao.getComboIds(11112);
         
-        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName();
+        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName() + "|" + booking1.getComboIds();
     }
 
     @Override
@@ -257,11 +267,11 @@ public class DataServiceImpl implements DataService {
     @Override
     public List<HospitalDto> getHospitals() {
         List<HospitalDto> hospitalDtos = new ArrayList<>();
-        for(int index = 1; index < 3; index++)
+        List<Hospital> hospitals = hospitalDao.get();
+        for(int index = 0; index < hospitals.size(); index++)
         {
             int hospitalId = index;
-            HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
-            hospitalDtos.add(new HospitalDto(hospitalConfigData.getHospitalId(), hospitalConfigData.getHospitalName()));
+            hospitalDtos.add(new HospitalDto(hospitals.get(hospitalId).getHospitalId(), hospitals.get(hospitalId).getName()));
 
         }
         return hospitalDtos;
@@ -325,7 +335,7 @@ public class DataServiceImpl implements DataService {
             comboName = comboName + comboDtos.get(i).getName() + "#";
         }
 
-        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId));
+        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId, BookingStatus.Processing));
         rspDto.setHospitalId(hospitalId);
         rspDto.setProfileId(profileId);
 
@@ -348,19 +358,36 @@ public class DataServiceImpl implements DataService {
             for(int j = 1; j < sourceStrArray.length; j++)
             {
                 int comboId = Integer.parseInt(sourceStrArray[j]);
-                ComboConfigData comboConfigData = comboConfig.get(hospitalId, comboId);
-                comboDtos.add(new ComboDto(comboId, comboConfigData.getComboName()));
+                Combo combo = comboDao.get(comboId);
+                comboDtos.add(new ComboDto(comboId, combo.getComboName()));
             }
             long bookingId = bookings.get(i).getBookingId();
             Date dateTime = bookings.get(i).getDateTime();
+            BookingStatus bookingStatus = bookings.get(i).getBookingStatus();
 
-            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos));
+            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos, bookingStatus));
 
         }
 
         rspDto.setBookings(bookingInfoDtos);
 
         return rspDto;
+    }
+
+
+    @Override
+    public List<DepartmentDto> getDepartments(GetWXDepartmentsReqDto getWXDepartmentsReqDto){
+        //openid 和 userid 要做判别和权限吗？
+
+        List<DepartmentDto> departmentDtos = new ArrayList<>();
+        List<Department> departments = departmentDao.get();
+        for(int i = 0; i < departments.size(); i++)
+        {
+            departmentDtos.add(new DepartmentDto(departments.get(i).getDepartmentId(), departments.get(i).getName()));
+        }
+
+        return departmentDtos;
+
     }
 
     // 鉴权接口成功回包赋值

@@ -109,8 +109,8 @@ public class DataController {
     // 根据套餐id获取所有科室信息接口
     @PostMapping(value = "/wx/booking/departments", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<List<DepartmentDto> > getDepartments(@RequestBody GetWXDepartmentsReqDto getWXBookingsReqDto) {
-        List<DepartmentDto> rspDto = new ArrayList<>();
-        return new RestResponse<>(rspDto);
+        List<DepartmentDto> departmentDtos = dataService.getDepartments(getWXBookingsReqDto);
+        return new RestResponse<>(departmentDtos);
     }
 
     // 根据套餐id获取所有科室信息接口
@@ -128,6 +128,14 @@ public class DataController {
     @PostMapping(value = "/wx/booking/department/items/upsert", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public RestResponse<UpsertWXItemRspDto> upsertItems(@RequestBody UpsertWXItemReqDto upsertWXItemReqDto) {
         UpsertWXItemRspDto rspDto = new UpsertWXItemRspDto();
+        return new RestResponse<>(rspDto);
+    }
+
+
+    // 根据bookingid获取所有套餐所有配置item和部门信息
+    @PostMapping(value = "/wx/booking/config", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<GetBookingConfigRspDto> GetBookingConfig(@RequestBody GetBookingConfigReqDto getBookingConfigReqDto) {
+        GetBookingConfigRspDto rspDto = new GetBookingConfigRspDto();
         return new RestResponse<>(rspDto);
     }
 

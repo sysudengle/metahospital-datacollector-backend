@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class GetWXBookingsRspDto {
-    private List<BookingInfoDto> bookings;
+    private List<BookingInfoDto> bookings;  //bookings 里该有status
 }
