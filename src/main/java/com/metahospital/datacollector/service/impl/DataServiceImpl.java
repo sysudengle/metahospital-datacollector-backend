@@ -93,28 +93,32 @@ public class DataServiceImpl implements DataService {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR);
         }
         long userId = genUserId();
-	    userDao.replace(new User(userId, "handsome_"+userId, UserType.Patient));
+	    userDao.replace(new User(userId, "handsome_"+userId, UserType.Patient.getValue()));
 	    User user = userDao.get(userId);
         wechatAccountDao.replace(new WechatAccount("aaa", "bbb", "ccc", user.getUserId()));
         WechatAccount wechatAccount = wechatAccountDao.get("aaa");
 	    innerAccountDao.replace(new InnerAccount("aaa", "bbb", user.getUserId()));
 	    InnerAccount innerAccount = innerAccountDao.get("aaa");
 	    int hospitalId = hospitalConfig.getDataList().get(0).getHospitalId();
-	    userDoctorDao.replace(new UserDoctor(userId, hospitalId, "handsome_"+userId, DoctorStatus.Unknown, ""));
+	    userDoctorDao.replace(new UserDoctor(userId, hospitalId, "handsome_"+userId, DoctorStatus.Unknown.getValue(), ""));
 	    UserDoctor userDoctor = userDoctorDao.get(userId);
 	    long profileId = genUserId();
 	    userProfileDao.replace(new UserProfile(userId, hospitalId, profileId));
 	    List<UserProfile> userProfile = userProfileDao.getAll(userId);
 	    String personalID = "1111111000000";
-	    profileDao.replace(new Profile(hospitalId, profileId, personalID, Gender.Male, "abc", "abcd"));
+	    profileDao.replace(new Profile(hospitalId, profileId, personalID, Gender.Male.getValue(), "abc", "abcd"));
 	    Profile profile = profileDao.get(hospitalId, profileId);
 	    Profile profile1 = profileDao.getByPersonalID(hospitalId, personalID);
 	    long bookingId = genUserId();
-	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), "", BookingStatus.Processing));
+	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), "", BookingStatus.Processing.getValue()));
 	    List<Booking> booking = bookingDao.getAll(hospitalId, profileId);
         Booking booking1 = bookingDao.getComboIds(11112);
+
+        BookingStatus bookingStatus = BookingStatus.Completed;
+        int a = bookingStatus.getValue();
+
         
-        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName() + "|" + booking1.getComboIds();
+        return id + "|" + name + "|" + wechatAccount.getUserId() + "|" + user.getName() + "|" + BookingStatus.convert(a) + a;
     }
 
     @Override
@@ -151,14 +155,14 @@ public class DataServiceImpl implements DataService {
             //这样成功注册的医生就可以微信登录即为医生。
             long userId = wxAccount.getUserId();
             User user = userDao.get(userId);
-            setAuthRsp(rspDto, cacheKey, openId, userId, user.getUserType());
+            setAuthRsp(rspDto, cacheKey, openId, userId, UserType.convert(user.getUserType()));
             LOGGER.info("auth hit db!");
             return rspDto;
         }
 
         // 首次登陆写入数据库及缓存 TODO 优化下述db操作合并为一个事务操作
         long newUserId = new Random().nextLong(); //暂时先用随机长型代替
-        userDao.replace(new User(newUserId, "lee", UserType.Patient));
+        userDao.replace(new User(newUserId, "lee", UserType.Patient.getValue()));
 
         // mock测试代码，TODEL(allen)
         // User user = userDao.get(newUserId);
@@ -185,59 +189,22 @@ public class DataServiceImpl implements DataService {
         String staffId = registerWXDoctorReqDto.getStaffId();
         //医院id和医院名字
         int hospitalId = registerWXDoctorReqDto.getHospitalId();
-        HospitalConfigData hospitalConfigData = hospitalConfig.get(hospitalId);
-        String hospitalName = hospitalConfigData.getHospitalName();
+        Hospital hospital = hospitalDao.get().get(hospitalId);
+        String hospitalName = hospital.getName();
         //判断openId，userId是否配对存在于数据库
         long userId = registerWXDoctorReqDto.getUserId();
 
         UserDoctor userDoctor = userDoctorDao.get(userId);
         // REVIEWED 已存在注册信息,就不该使用该接口，通过异常码给到前端操作有误
-        if (userDoctor == null) {
+        if (userDoctor != null) {
             throw new CollectorException(RestCode.DOCTOR_ALREADY_REGISTER_ERR);
         }
 
-        //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
-        //医生注册信息录入数据库，并返回待定状态。
-        userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
+        userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply.getValue(), ""));
 
+        rspDto.setOpenId(registerWXDoctorReqDto.getOpenId());
+        rspDto.setUserId(userId);
         // TOREVIEW 减少if的嵌套，不引入圈复杂度
-//        if(userDoctor != null){
-//            //假设web端通过申请，注册成功并返回生成账户等信息。
-//            if(userDoctor.getStatus() == DoctorStatus.Valid){
-//                // TOREVIEW 如果存在这个用户的信息，不需要再创建账号密码，这块先注释后续再删除
-//                //虚构用户名和密码
-//                // InnerAccount innerAccount = new InnerAccount("accName", "password", userId);
-//                // innerAccountDao.replace(innerAccount);
-//                //用update更新db里的usertype,数据库操作还再更新，稍微用复杂一些的方法。
-//                User user = userDao.get(userId);
-//                String name = user.getName();
-//                userDao.replace(new User(userId, name, UserType.Doctor));
-//                //假设web端给定科室1
-//                int departmentId = 1;
-//                DepartmentConfigData departmentConfigData = departmentConfig.get(hospitalId,departmentId);
-//                String departmentName = departmentConfigData.getDepartmentName();
-//
-//                // setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Doctor, innerAccount.getAccountName(),
-//                //        innerAccount.getPassword(), hospitalName, departmentName);
-//            }
-//
-//            // 注册失败、无效和代办,均返回审核状态。
-//            else{
-//                setRegisterWXDoctorRsp(rspDto, userDoctor.getStatus(), UserType.Patient,
-//                        null, null, hospitalName, null);
-//            }
-//            return rspDto;
-//        }
-//
-//        //不存在注册信息
-//        else {
-//            //这里不应该用replace的逻辑，但是前面已经为已存在注册信息限定了条件,问题不大。
-//            //医生注册信息录入数据库，并返回待定状态。
-//            userDoctorDao.replace(new UserDoctor(userId, hospitalId, staffId, DoctorStatus.UnderApply, ""));
-//            setRegisterWXDoctorRsp(rspDto, DoctorStatus.UnderApply, UserType.Patient,
-//                    null, null, hospitalName, null);
-//        }
-
         return rspDto;
     }
 
@@ -255,7 +222,7 @@ public class DataServiceImpl implements DataService {
         }
 
         rspDto.setExists(true);
-        rspDto.setDoctorStatus(userDoctor.getStatus());
+        rspDto.setDoctorStatus(DoctorStatus.convert(userDoctor.getStatus()));
         rspDto.setHospitalId(userDoctor.getHospitalId());
         Hospital hospital = scheduleService.getHospital(userDoctor.getHospitalId());
         rspDto.setHospitalName(hospital.getName());
@@ -286,7 +253,7 @@ public class DataServiceImpl implements DataService {
         ProfileInfoDto profile = addWXProfileReqDto.getProfileInfoDto();
         profileDao.replace(new Profile(profile.getHospitalId(),
                 profile.getProfileId(), profile.getPersonalID(),
-                profile.getGender(), profile.getPidAddress(),
+                profile.getGender().getValue(), profile.getPidAddress(),
                 profile.getHomeAddress()));
 
         return rspDto;
@@ -305,7 +272,7 @@ public class DataServiceImpl implements DataService {
             int hospitalId = userProfiles.get(i).getHospitalId();
             Profile profile = profileDao.get(hospitalId,profileId);
             profileInfoDtos.add(new ProfileInfoDto(profile.getProfileId(), profile.getHospitalId(),
-                    profile.getPersonalID(), profile.getGender(), profile.getPidAddress(),
+                    profile.getPersonalID(), Gender.convert(profile.getGender()), profile.getPidAddress(),
                     profile.getHomeAddress()));
         }
 
@@ -335,7 +302,7 @@ public class DataServiceImpl implements DataService {
             comboName = comboName + comboDtos.get(i).getName() + "#";
         }
 
-        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId, BookingStatus.Processing));
+        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId, BookingStatus.Processing.getValue()));
         rspDto.setHospitalId(hospitalId);
         rspDto.setProfileId(profileId);
 
@@ -363,9 +330,9 @@ public class DataServiceImpl implements DataService {
             }
             long bookingId = bookings.get(i).getBookingId();
             Date dateTime = bookings.get(i).getDateTime();
-            BookingStatus bookingStatus = bookings.get(i).getBookingStatus();
+            int bookingStatus = bookings.get(i).getBookingStatus();
 
-            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos, bookingStatus));
+            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos, BookingStatus.values()[bookingStatus]));
 
         }
 
@@ -399,17 +366,6 @@ public class DataServiceImpl implements DataService {
         redisDao.set(cacheKey, userIdRedis);
     }
 
-//    //注册成功回包赋值
-//    private void setRegisterWXDoctorRsp(RegisterWXDoctorRspDto rspDtoRef, DoctorStatus doctorStatus,
-//                                        UserType userType, String accountName, String password,
-//                                        String hospitalName, String departmentName){
-//        rspDtoRef.setDoctorStatus(doctorStatus);
-//        rspDtoRef.setUType(userType);
-//        rspDtoRef.setAccountName(accountName);
-//        rspDtoRef.setPassword(password);
-//        rspDtoRef.setHospitalName(hospitalName);
-//        rspDtoRef.setDepartmentName(departmentName);
-//    }
 
 	private long genUserId() {
 		// todo why 这个随便写的，有问题的，需要添加一个id生成工具
