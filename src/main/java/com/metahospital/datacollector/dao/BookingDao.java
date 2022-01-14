@@ -46,6 +46,27 @@ public class BookingDao {
             MysqlDao.closeSqlSession();
         }
     }
+
+    //添加一个数据库行为，根据bookingid取套餐
+    public Booking getComboIds(long bookingId){
+        SqlSession sqlSession = MysqlDao.getSqlSession();
+        try {
+            Map<String, Object> map = new HashMap();
+            map.put("bookingId", bookingId);
+            List<Booking> list = sqlSession.selectList("BookingMapper.getComboIds", map);
+            if (list == null || list.isEmpty()) {
+                return null;
+            }
+            return list.get(0);
+        } catch (CollectorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, e.getLocalizedMessage());
+        } finally {
+            MysqlDao.closeSqlSession();
+        }
+    }
     
 	public void replace(Booking booking) {
 	    SqlSession sqlSession = MysqlDao.getSqlSession();
