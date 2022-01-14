@@ -6,16 +6,13 @@ public class UserDoctor {
 	private long userId;
 	private int hospitalId;
 	private String staffId;
-
-
-
-	private DoctorStatus status;
+	private int status;
 	private String departmentIds;
 
 	public UserDoctor() {
 	}
 
-	public UserDoctor(long userId, int hospitalId, String staffId, DoctorStatus status, String departmentIds) {
+	public UserDoctor(long userId, int hospitalId, String staffId, int status, String departmentIds) {
 		this.userId = userId;
 		this.hospitalId = hospitalId;
 		this.staffId = staffId;
@@ -47,9 +44,9 @@ public class UserDoctor {
 		this.staffId = staffId;
 	}
 
-	public DoctorStatus getStatus() {return status;}
+	public int getStatus() {return status;}
 
-	public void setStatus(DoctorStatus status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

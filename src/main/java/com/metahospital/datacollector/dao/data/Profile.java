@@ -13,14 +13,14 @@ public class Profile {
 	private int hospitalId;
 	private long profileId;
 	private String personalID;
-	private Gender gender;
+	private int gender;
 	private String pidAddress;
 	private String homeAddress;
 
 	public Profile() {
 	}
 
-	public Profile(int hospitalId, long profileId, String personalID, Gender gender, String pidAddress, String homeAddress) {
+	public Profile(int hospitalId, long profileId, String personalID, int gender, String pidAddress, String homeAddress) {
 		this.hospitalId = hospitalId;
 		this.profileId = profileId;
 		this.personalID = personalID;
@@ -53,11 +53,11 @@ public class Profile {
 		this.personalID = personalID;
 	}
 
-	public Gender getGender() {
+	public int getGender() {
 		return gender;
 	}
 
-	public void setGender(Gender gender) {
+	public void setGender(int gender) {
 		this.gender = gender;
 	}
 

@@ -18,12 +18,12 @@ public class Booking {
 	private long bookingId;
 	private Date dateTime;
 	private String comboIds;
-	private BookingStatus bookingStatus;
+	private int bookingStatus;
 
 	public Booking() {
 	}
 
-	public Booking(int hospitalId, long profileId, long bookingId, Date dateTime, String comboIds, BookingStatus bookingStatus) {
+	public Booking(int hospitalId, long profileId, long bookingId, Date dateTime, String comboIds, int bookingStatus) {
 		this.hospitalId = hospitalId;
 		this.profileId = profileId;
 		this.bookingId = bookingId;
@@ -72,7 +72,7 @@ public class Booking {
 		this.comboIds = comboIds;
 	}
 
-	public BookingStatus getBookingStatus() {return bookingStatus;}
+	public int getBookingStatus() {return bookingStatus;}
 
-	public void setBookingStatus(BookingStatus bookingStatus) {this.bookingStatus = bookingStatus;}
+	public void setBookingStatus(int bookingStatus) {this.bookingStatus = bookingStatus;}
 }
