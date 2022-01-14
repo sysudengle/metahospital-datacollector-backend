@@ -12,12 +12,12 @@ import com.metahospital.datacollector.common.enums.UserType;
 public class User {
 	private long userId;
 	private String name;
-	private UserType userType;
+	private int userType;
 
 	public User() {
 	}
 
-	public User(long userId, String name, UserType userType) {
+	public User(long userId, String name, int userType) {
 		this.userId = userId;
 		this.name = name;
 		this.userType = userType;
@@ -39,11 +39,11 @@ public class User {
 		this.name = name;
 	}
 
-	public UserType getUserType() {
+	public int getUserType() {
 		return userType;
 	}
 
-	public void setUserType(UserType userType) {
+	public void setUserType(int userType) {
 		this.userType = userType;
 	}
 }
