@@ -1,8 +1,13 @@
 package com.metahospital.datacollector.common.enums;
 
+import org.omg.CORBA.DynAnyPackage.Invalid;
+
+import javax.validation.Valid;
+
 public enum Gender {
-    Male(0),
-    Female(1);
+    Unknow(0),
+    Male(1),
+    Female(2);
 
     private final int value;
     Gender(int value){
@@ -12,14 +17,14 @@ public enum Gender {
         return value;
     }
 
-    public static Gender convert(int value){
-        switch (value) {
-            case 0:
-                return Male;
-            case 1:
-                return Female;
-            default:
-                return null;
+    public static Gender convert(int value) {
+        Gender gender = Unknow;
+        if (value == Male.getValue()) {
+            gender = Male;
+        } else if (value == Female.getValue()) {
+            gender = Female;
         }
+
+        return gender;
     }
 }

@@ -1,8 +1,9 @@
 package com.metahospital.datacollector.common.enums;
 
 public enum BookingStatus {
-    Processing(0),
-    Completed(100);
+    Unknown(0),
+    Processing(1),
+    Completed(2);
 
     private int value;
 
@@ -13,14 +14,14 @@ public enum BookingStatus {
         return value;
     }
 
-    public static BookingStatus convert(int value){
-        switch (value) {
-            case 0:
-                return Processing;
-            case 100:
-                return Completed;
-            default:
-                return null;
+    public static BookingStatus convert(int value) {
+        BookingStatus status = Unknown;
+        if (value == Processing.getValue()) {
+            status = Processing;
+        } else if (value == Completed.getValue()) {
+            status = Completed;
         }
+
+        return status;
     }
 }

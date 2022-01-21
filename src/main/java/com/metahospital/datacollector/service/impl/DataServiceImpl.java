@@ -31,6 +31,7 @@ import com.metahospital.datacollector.service.DataService;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 public class DataServiceImpl implements DataService {
@@ -107,7 +108,7 @@ public class DataServiceImpl implements DataService {
 	    List<UserProfile> userProfile = userProfileDao.getAll(userId);
 	    String personalID = "1111111000000";
 	    profileDao.replace(new Profile(hospitalId, profileId, personalID, Gender.Male.getValue(), "abc", "abcd"));
-	    Profile profile = profileDao.get(hospitalId, profileId);
+	    // Profile profile = profileDao.get(hospitalId, profileId);
 	    Profile profile1 = profileDao.getByPersonalID(hospitalId, personalID);
 	    long bookingId = genUserId();
 	    bookingDao.replace(new Booking(hospitalId, profileId, bookingId, new Date(), "", BookingStatus.Processing.getValue()));
@@ -160,7 +161,7 @@ public class DataServiceImpl implements DataService {
             return rspDto;
         }
 
-        // 首次登陆写入数据库及缓存 TODO 优化下述db操作合并为一个事务操作
+        // 首次登陆写入数据库及缓存 TODO(max) 优化下述db操作合并为一个事务操作
         long newUserId = new Random().nextLong(); //暂时先用随机长型代替
         userDao.replace(new User(newUserId, "lee", UserType.Patient.getValue()));
 
@@ -233,26 +234,36 @@ public class DataServiceImpl implements DataService {
 
     @Override
     public List<HospitalDto> getHospitals() {
+        // TOREVIEW
+        List<Hospital> hospitals =  scheduleService.getAllHospitals();
         List<HospitalDto> hospitalDtos = new ArrayList<>();
-        List<Hospital> hospitals = hospitalDao.get();
-        for(int index = 0; index < hospitals.size(); index++)
-        {
-            int hospitalId = index;
-            hospitalDtos.add(new HospitalDto(hospitals.get(hospitalId).getHospitalId(), hospitals.get(hospitalId).getName()));
 
+        for (Hospital hospital : hospitals) {
+            hospitalDtos.add(new HospitalDto(hospital.getHospitalId(), hospital.getName()));
         }
+
         return hospitalDtos;
     }
 
     @Override
-    public AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto) {
+    public AddWXProfileRspDto upsertProfile(AddWXProfileReqDto addWXProfileReqDto) {
         AddWXProfileRspDto rspDto = new AddWXProfileRspDto();
-        userProfileDao.replace(new UserProfile(addWXProfileReqDto.getUserId(), addWXProfileReqDto.getProfileInfoDto().getHospitalId(), addWXProfileReqDto.getProfileInfoDto().getProfileId()));
+        // TODO(max) 替换为全局统一id
+        // TOREVIEW bookingId后台生成, 如果前端已知profileId，说明是更新操作，如果不是则新增
+        long profileId = -1;
+        if (addWXProfileReqDto.getProfileInfoDto().getProfileId() == -1) {
+            profileId = new Random().nextLong();
+        } else {
+            profileId = addWXProfileReqDto.getProfileInfoDto().getProfileId();
+        }
+        // TOREVIEW profileId应该由后台生成
+        userProfileDao.replace(new UserProfile(addWXProfileReqDto.getUserId(), addWXProfileReqDto.getProfileInfoDto().getHospitalId(),
+                profileId));
 
         // REVIEWED a) 减少重复代码，可引用 b) 后续连续db操作考虑用事务处理
         ProfileInfoDto profile = addWXProfileReqDto.getProfileInfoDto();
         profileDao.replace(new Profile(profile.getHospitalId(),
-                profile.getProfileId(), profile.getPersonalID(),
+                profileId, profile.getPersonalID(),
                 profile.getGender().getValue(), profile.getPidAddress(),
                 profile.getHomeAddress()));
 
@@ -262,49 +273,63 @@ public class DataServiceImpl implements DataService {
     @Override
     public GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
         GetWXProfilesRspDto rspDto = new GetWXProfilesRspDto();
-        List<UserProfile> userProfiles = userProfileDao.getAll(getWXProfilesReqDto.getUserId());
-
-        //我需要以下列表类的内容作为返回值
+        // TOREVIEW 只用一次db的查询即可，用联表操作
+        List<Profile> profiles = profileDao.getAll(getWXProfilesReqDto.getUserId());
         List<ProfileInfoDto> profileInfoDtos = new ArrayList<>();
-        // REVIEWED 小范围下标直接用i即可
-        for(int i = 0; i < userProfiles.size(); i++){
-            long profileId = userProfiles.get(i).getProfileId();
-            int hospitalId = userProfiles.get(i).getHospitalId();
-            Profile profile = profileDao.get(hospitalId,profileId);
-            profileInfoDtos.add(new ProfileInfoDto(profile.getProfileId(), profile.getHospitalId(),
-                    profile.getPersonalID(), Gender.convert(profile.getGender()), profile.getPidAddress(),
-                    profile.getHomeAddress()));
+        // TOREVIEW 不用全参数构造函数，避免改变成员变量顺序时候出错，以及多次db读改一次db读
+        for (Profile p : profiles) {
+            ProfileInfoDto pDto = new ProfileInfoDto();
+            pDto.setProfileId(p.getProfileId());
+            pDto.setHomeAddress(p.getHomeAddress());
+            pDto.setPersonalID(p.getPersonalID());
+            pDto.setHospitalId(p.getHospitalId());
+            pDto.setPidAddress(p.getPidAddress());
+            pDto.setGender(Gender.convert(p.getGender()));
+
+            profileInfoDtos.add(pDto);
         }
 
         rspDto.setProfiles(profileInfoDtos);
         return rspDto;
     }
 
+    // TOREVIEW 同时包含新增和编辑的功能，用upsert表示，update/insert的意思
     @Override
-    public AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto) {
+    public AddWXBookingRspDto upsertBooking(AddWXBookingReqDto addWXBookingReqDto) {
         AddWXBookingRspDto rspDto = new AddWXBookingRspDto();
 
         long profileId = addWXBookingReqDto.getProfileId();
         int hospitalId = addWXBookingReqDto.getHospitalId();
-        long bookingId = addWXBookingReqDto.getBookingInfoDto().getBookingId();
-        Date dateTime = addWXBookingReqDto.getBookingInfoDto().getDateTime();
-        List<ComboDto> comboDtos = addWXBookingReqDto.getBookingInfoDto().getComboDtos();
-
-
-        //前端是id和name是确定都传吗？需不需要只穿id 套餐名严格用数据库索引
-        String comboId = "#";
-        String comboName = "#";
-
-        for (int i = 0; i < comboDtos.size(); i++)
-        {
-            //感觉需要判空，和判误码，但我不知道该如何加
-            comboId =  comboId + comboDtos.get(i).getComboId() + "#";
-            comboName = comboName + comboDtos.get(i).getName() + "#";
+        // TODO(max) 替换为全局统一id
+        // TOREVIEW bookingId后台生成, 如果前端已知bookingId，说明是更新操作，如果不是则新增
+        long bookingId = -1;
+        if (addWXBookingReqDto.getBookingInfoDto().getBookingId() == -1) {
+            bookingId = new Random().nextLong();
+        } else {
+            bookingId = addWXBookingReqDto.getBookingInfoDto().getBookingId();
         }
 
-        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboId, BookingStatus.Processing.getValue()));
-        rspDto.setHospitalId(hospitalId);
-        rspDto.setProfileId(profileId);
+        Date dateTime = addWXBookingReqDto.getBookingInfoDto().getDateTime();
+        List<ComboDto> comboDtos = addWXBookingReqDto.getBookingInfoDto().getComboDtos();
+        //前端是id和name是确定都传吗？需不需要只穿id 套餐名严格用数据库索引
+        // TOREVIEW 仅仅在中间加入分隔符
+        String comboIds = "";
+        for (int i = 0; i < comboDtos.size(); i++) {
+            ComboDto comboDto = comboDtos.get(i);
+
+            comboIds += comboDto.getComboId();
+            if (i != comboDtos.size() - 1) {
+                comboIds += "#";
+            }
+        }
+        BookingStatus bookingStatus;
+        if (addWXBookingReqDto.getBookingInfoDto().getBookingStatus() == BookingStatus.Unknown) {
+            bookingStatus = BookingStatus.Processing;
+        } else {
+            bookingStatus = addWXBookingReqDto.getBookingInfoDto().getBookingStatus();
+        }
+
+        bookingDao.replace(new Booking(hospitalId, profileId, bookingId, dateTime, comboIds, bookingStatus.getValue()));
 
         return rspDto;
     }
@@ -317,25 +342,18 @@ public class DataServiceImpl implements DataService {
         List<Booking> bookings = bookingDao.getAll(hospitalId, profileId);
         List<BookingInfoDto> bookingInfoDtos = new ArrayList<>();
 
+        for (Booking booking : bookings) {
+            Set<Integer> comboIds = booking.deserializeComboIds();
+            List<Combo> combos = scheduleService.getRelatedCombos(comboIds);
+            List<ComboDto> comboDtos = combos.stream().map(c -> new ComboDto(c.getComboId(), c.getComboName())).collect(Collectors.toList());
 
-        for(int i = 0; i < bookings.size(); i++){
-            //分割字符串，提取comboid
-            String[] sourceStrArray = bookings.get(i).getComboIds().split("#");
-            List<ComboDto> comboDtos = new ArrayList<>();
-            for(int j = 1; j < sourceStrArray.length; j++)
-            {
-                int comboId = Integer.parseInt(sourceStrArray[j]);
-                Combo combo = comboDao.get(comboId);
-                comboDtos.add(new ComboDto(comboId, combo.getComboName()));
-            }
-            long bookingId = bookings.get(i).getBookingId();
-            Date dateTime = bookings.get(i).getDateTime();
-            int bookingStatus = bookings.get(i).getBookingStatus();
-
-            bookingInfoDtos.add(new BookingInfoDto(bookingId, dateTime, comboDtos, BookingStatus.values()[bookingStatus]));
-
+            BookingInfoDto bookingInfoDto = new BookingInfoDto();
+            bookingInfoDto.setBookingId(booking.getBookingId());
+            bookingInfoDto.setBookingStatus(BookingStatus.convert(booking.getBookingStatus()));
+            bookingInfoDto.setComboDtos(comboDtos);
+            bookingInfoDto.setDateTime(booking.getDateTime());
+            bookingInfoDtos.add(bookingInfoDto);
         }
-
         rspDto.setBookings(bookingInfoDtos);
 
         return rspDto;

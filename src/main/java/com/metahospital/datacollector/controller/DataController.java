@@ -22,7 +22,6 @@ import com.metahospital.datacollector.service.DataService;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,9 +78,9 @@ public class DataController {
     }
 
     // 新建档案接口
-    @PostMapping(value = "wx/profile/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AddWXProfileRspDto> addWXProfile(@RequestBody AddWXProfileReqDto addWXProfileReqDto) {
-        AddWXProfileRspDto rspDto = dataService.addProfile(addWXProfileReqDto);
+    @PostMapping(value = "wx/profile/upsert", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AddWXProfileRspDto> upsertWXProfile(@RequestBody AddWXProfileReqDto addWXProfileReqDto) {
+        AddWXProfileRspDto rspDto = dataService.upsertProfile(addWXProfileReqDto);
         return new RestResponse<>(rspDto);
     }
 
@@ -93,9 +92,9 @@ public class DataController {
     }
 
     // 新建预约接口
-    @PostMapping(value = "wx/booking/add", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public RestResponse<AddWXBookingRspDto> addBook(@RequestBody AddWXBookingReqDto appointmentReqDto) {
-        AddWXBookingRspDto rspDto = dataService.addBooking(appointmentReqDto);
+    @PostMapping(value = "wx/booking/upsert", consumes = {MediaType.APPLICATION_JSON_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public RestResponse<AddWXBookingRspDto> upsertBook(@RequestBody AddWXBookingReqDto appointmentReqDto) {
+        AddWXBookingRspDto rspDto = dataService.upsertBooking(appointmentReqDto);
         return new RestResponse<>(rspDto);
     }
 

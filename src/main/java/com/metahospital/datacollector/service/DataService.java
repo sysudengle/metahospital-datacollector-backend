@@ -21,10 +21,10 @@ public interface DataService {
 
     List<HospitalDto> getHospitals();
 
-    AddWXProfileRspDto addProfile(AddWXProfileReqDto addWXProfileReqDto);
+    AddWXProfileRspDto upsertProfile(AddWXProfileReqDto addWXProfileReqDto);
     GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto);
 
-    AddWXBookingRspDto addBooking(AddWXBookingReqDto addWXBookingReqDto);
+    AddWXBookingRspDto upsertBooking(AddWXBookingReqDto addWXBookingReqDto);
     GetWXBookingsRspDto getBookings(GetWXBookingsReqDto getAppointmentRspDto);
     List<DepartmentDto> getDepartments(GetWXDepartmentsReqDto getWXDepartmentsReqDto);
 }

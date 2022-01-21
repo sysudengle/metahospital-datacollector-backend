@@ -18,25 +18,22 @@ import com.metahospital.datacollector.dao.data.UserProfile;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ProfileDao {
 
-    public Profile get(int hospitalId, long profileId) {
+    public List<Profile> getAll(long userId) {
         SqlSession sqlSession = MysqlDao.getSqlSession();
         try {
             Map<String, Object> map = new HashMap();
-            map.put("hospitalId", hospitalId);
-	        map.put("profileId", profileId);
-            List<Profile> list = sqlSession.selectList("ProfileMapper.get", map);
-            if (list == null || list.isEmpty()) {
-                return null;
+            // map.put("hospitalId", hospitalId);
+	        map.put("userId", userId);
+            List<Profile> profiles = sqlSession.selectList("ProfileMapper.get", map);
+            if (profiles == null || profiles.isEmpty()) {
+                return Collections.emptyList();
             }
-            return list.get(0);
+            return profiles;
         } catch (CollectorException e) {
             throw e;
         } catch (Exception e) {

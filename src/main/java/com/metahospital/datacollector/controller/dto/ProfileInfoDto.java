@@ -3,9 +3,11 @@ package com.metahospital.datacollector.controller.dto;
 import com.metahospital.datacollector.common.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProfileInfoDto {
     private long profileId = -1; // 写操作自行生成
     private int hospitalId; // 医院ID

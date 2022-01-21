@@ -16,8 +16,12 @@
 	    <result property="homeAddress" column="home_address"/>
     </resultMap>
 
+
     <select id="get" parameterType="map" resultMap="ProfileResultMap">
-        select hospital_id, profile_id, personal_id, gender, pid_address, home_address from profile where hospital_id = #{hospitalId} and profile_id = #{profileId};
+        select hospital_id, up.profile_id, personal_id, gender, pid_address, home_address
+		from profile as p
+		inner join (select profile_id from user_profile where user_id = #{userId}) as up
+		on p.profile_id = up.profile_id;
     </select>
 
 	<select id="getByPersonalID" parameterType="map" resultMap="ProfileResultMap">

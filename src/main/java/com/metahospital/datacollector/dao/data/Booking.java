@@ -11,13 +11,15 @@ import com.metahospital.datacollector.common.enums.BookingStatus;
 import org.joda.time.DateTime;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Booking {
 	private int hospitalId;
 	private long profileId;
 	private long bookingId;
 	private Date dateTime;
-	private String comboIds;
+	private String comboIds = "";
 	private int bookingStatus;
 
 	public Booking() {
@@ -75,4 +77,21 @@ public class Booking {
 	public int getBookingStatus() {return bookingStatus;}
 
 	public void setBookingStatus(int bookingStatus) {this.bookingStatus = bookingStatus;}
+
+	public Set<Integer> deserializeComboIds() {
+		System.out.println("hehe:" + comboIds);
+		Set<Integer> ids = new HashSet<>();
+		// TOREVIEW -1用于移除空的字符
+		String[] comboIdStrs = comboIds.trim().split("#", -1);
+		for (String comboIdStr : comboIdStrs) {
+			System.out.println("hehe 2:" + comboIdStr);
+		}
+
+		for (String comboIdStr : comboIdStrs) {
+			int comboId = Integer.parseInt(comboIdStr);
+			ids.add(comboId);
+		}
+
+		return ids;
+	}
 }

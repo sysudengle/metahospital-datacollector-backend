@@ -2,31 +2,29 @@ package com.metahospital.datacollector.common.enums;
 
 public enum DoctorStatus {
     Unknown(0),
-    UnderApply(50),
-    Valid(200),
-    Invalid(400);
+    UnderApply(1),
+    Valid(2),
+    Invalid(3);
 
     private final int value;
-    DoctorStatus(int value){
+    DoctorStatus(int value) {
         this.value = value;
     }
-    public int getValue(){
+    public int getValue() {
         return value;
     }
 
-    public static DoctorStatus convert(int value){
-        switch (value) {
-            case 0:
-                return Unknown;
-            case 50:
-                return UnderApply;
-            case 200:
-                return Valid;
-            case 400:
-                return Invalid;
-            default:
-                return null;
+    public static DoctorStatus convert(int value) {
+        DoctorStatus status = Unknown;
+        if (value == UnderApply.getValue()) {
+            status = UnderApply;
+        } else if (value == Valid.getValue()) {
+            status = Valid;
+        } else if (value == Invalid.getValue()) {
+            status = Invalid;
         }
+
+        return status;
     }
 
 }
