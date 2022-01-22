@@ -7,7 +7,7 @@
 
 <!-- namespace属性是名称空间，必须唯一 -->
 <mapper namespace="ComboMapper">
-    <resultMap type="com.metahospital.datacollector.dao.data.Combo" id="ComboResultMap">
+    <resultMap type="com.metahospital.datacollector.dao.configbak.data.Combo" id="ComboResultMap">
         <id property="comboId" column="combo_id"/>
         <result property="comboName" column="combo_name"/>
     </resultMap>

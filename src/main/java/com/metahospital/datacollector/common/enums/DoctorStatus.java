@@ -7,24 +7,21 @@ public enum DoctorStatus {
     Invalid(3);
 
     private final int value;
-    DoctorStatus(int value) {
+    
+    DoctorStatus(int value){
         this.value = value;
     }
-    public int getValue() {
+    
+    public int getValue(){
         return value;
     }
 
-    public static DoctorStatus convert(int value) {
-        DoctorStatus status = Unknown;
-        if (value == UnderApply.getValue()) {
-            status = UnderApply;
-        } else if (value == Valid.getValue()) {
-            status = Valid;
-        } else if (value == Invalid.getValue()) {
-            status = Invalid;
+    public static DoctorStatus valueOf(int value){
+        for (DoctorStatus doctorStatus : values()) {
+            if (doctorStatus.getValue() == value) {
+                return doctorStatus;
+            }
         }
-
-        return status;
+        return Unknown;
     }
-
 }

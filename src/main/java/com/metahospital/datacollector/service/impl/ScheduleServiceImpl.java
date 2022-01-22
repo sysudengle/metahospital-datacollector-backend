@@ -9,10 +9,10 @@ package com.metahospital.datacollector.service.impl;
 
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
-import com.metahospital.datacollector.dao.ComboDao;
-import com.metahospital.datacollector.dao.HospitalDao;
-import com.metahospital.datacollector.dao.data.Combo;
-import com.metahospital.datacollector.dao.data.Hospital;
+import com.metahospital.datacollector.dao.configbak.ComboDao;
+import com.metahospital.datacollector.dao.configbak.HospitalDao;
+import com.metahospital.datacollector.dao.configbak.data.Combo;
+import com.metahospital.datacollector.dao.configbak.data.Hospital;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

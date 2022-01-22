@@ -1,0 +1,37 @@
+[{
+	"ItemId": 1,
+	"ItemName": "身高",
+	"ItemType": 1,
+	"ItemTypeId": 1,
+	"DepartmentId": 1
+}, {
+	"ItemId": 2,
+	"ItemName": "体重",
+	"ItemType": 1,
+	"ItemTypeId": 2,
+	"DepartmentId": 1
+}, {
+	"ItemId": 3,
+	"ItemName": "心律",
+	"ItemType": 3,
+	"ItemTypeId": 1,
+	"DepartmentId": 2
+}, {
+	"ItemId": 4,
+	"ItemName": "心音",
+	"ItemType": 3,
+	"ItemTypeId": 2,
+	"DepartmentId": 2
+}, {
+	"ItemId": 5,
+	"ItemName": "皮肤",
+	"ItemType": 2,
+	"ItemTypeId": 1,
+	"DepartmentId": 3
+}, {
+	"ItemId": 6,
+	"ItemName": "关节",
+	"ItemType": 2,
+	"ItemTypeId": 1,
+	"DepartmentId": 3
+}]

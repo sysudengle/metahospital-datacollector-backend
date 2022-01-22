@@ -1,0 +1,13 @@
+[{
+	"DepartmentId": 1,
+	"DepartmentName": "一般项目科",
+	"ItemIds": [1, 2]
+}, {
+	"DepartmentId": 2,
+	"DepartmentName": "内科",
+	"ItemIds": [3, 4]
+}, {
+	"DepartmentId": 3,
+	"DepartmentName": "外科",
+	"ItemIds": [5, 6]
+}]

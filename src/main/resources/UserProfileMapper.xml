@@ -17,6 +17,10 @@
         select user_id, hospital_id, profile_id from user_profile where user_id = #{userId};
     </select>
 
+    <select id="get" parameterType="map" resultMap="UserProfileResultMap">
+        select user_id, hospital_id, profile_id from user_profile where user_id = #{userId} and hospital_id = #{hospitalId} and profile_id = #{profileId};
+    </select>
+
 	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.UserProfile">
 		replace into user_profile
 		(user_id, hospital_id, profile_id)

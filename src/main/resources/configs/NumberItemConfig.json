@@ -1,0 +1,15 @@
+[{
+	"NumberItemTypeId": 1,
+	"Min": 10,
+	"Max": 250,
+	"UnitDecimal": 0,
+	"UnitName": "cm",
+	"DefaultValue": 100
+}, {
+	"NumberItemTypeId": 2,
+	"Min": 50,
+	"Max": 2000,
+	"UnitDecimal": 1,
+	"UnitName": "kg",
+	"DefaultValue": 500
+}]

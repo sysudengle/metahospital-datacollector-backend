@@ -14,7 +14,6 @@ package com.metahospital.datacollector.dao;
 import com.metahospital.datacollector.aop.handler.CollectorException;
 import com.metahospital.datacollector.common.RestCode;
 import com.metahospital.datacollector.dao.data.Profile;
-import com.metahospital.datacollector.dao.data.UserProfile;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 

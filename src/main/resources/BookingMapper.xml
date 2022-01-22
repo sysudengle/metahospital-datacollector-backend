@@ -20,8 +20,8 @@
         select hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status from booking where hospital_id = #{hospitalId} and profile_id = #{profileId};
     </select>
 
-	<select id="getComboIds" parameterType="map" resultMap="BookingResultMap">
-		select hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status from booking where booking_id = #{bookingId};
+	<select id="get" parameterType="map" resultMap="BookingResultMap">
+		select hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status from booking where hospital_id = #{hospitalId} and profile_id = #{profileId} and booking_id = #{bookingId};
 	</select>
 
 	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.Booking">

@@ -31,19 +31,6 @@ import java.util.stream.Collectors;
 public class RedisDao {
     public static final Logger LOGGER = LoggerFactory.getLogger(RedisDao.class);
     private static final String EMPTY_STRING = "";
-    public enum PriKeyType {
-        OPENID_TYPE("0"),
-        USERID_TYPE("1");
-
-        private final String prefix;
-        PriKeyType(String prefix) {
-            this.prefix = prefix + "_";
-        }
-
-        public String getPrefix() {
-            return this.prefix;
-        }
-    }
 
     // 二级用户key
 //    public enum RedisSubKey {
@@ -67,6 +54,23 @@ public class RedisDao {
         boolean hasSet;
         try {
             redisTemplate.opsForValue().set(key, value);
+            redisTemplate.expire(key, aliveSecond, TimeUnit.SECONDS);
+            hasSet = true;
+        } catch (Exception ex) {
+            // redis错误不应该影响主流程, 仅测试用
+            throw new CollectorException(RestCode.REDIS_REQ_ERR, ex.getMessage());
+        }
+
+        return hasSet;
+    }
+
+    public boolean expire(final String key) {
+        return expire(key, aliveSecond);
+    }
+
+    public boolean expire(final String key, long aliveSecond) {
+        boolean hasSet;
+        try {
             redisTemplate.expire(key, aliveSecond, TimeUnit.SECONDS);
             hasSet = true;
         } catch (Exception ex) {

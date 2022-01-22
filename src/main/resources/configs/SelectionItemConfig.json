@@ -1,0 +1,23 @@
+[{
+	"SelectionItemTypeId": 1,
+	"OptionList": [{
+		"Value": 1,
+		"Desc": "齐"
+	}, {
+		"Value": 2,
+		"Desc": "不齐"
+	}],
+	"DefaultValue": [1],
+	"SelectNum": 1
+}, {
+	"SelectionItemTypeId": 2,
+	"OptionList": [{
+		"Value": 1,
+		"Desc": "未见异常"
+	}, {
+		"Value": 2,
+		"Desc": "问题很大"
+	}],
+	"DefaultValue": [1],
+	"SelectNum": 1
+}]

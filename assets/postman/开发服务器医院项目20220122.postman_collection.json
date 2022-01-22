@@ -1,0 +1,376 @@
+{
+	"variables": [],
+	"info": {
+		"name": "部署服务器医院项目20220122",
+		"_postman_id": "dad05775-58a5-c100-3edb-8727d69d3adb",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "微信登陆鉴权接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/auth",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"wechatJsCode\": \"aaaa\",\r\n    \"_wechatJsCode.comment\": \"微信登录时使用的code\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "微信医生注册接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/doctor/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\",\n    \"hospitalId\": 1,\n    \"_hospitalId.comment\": \"医院Id\",\n    \"staffId\": \"99999\",\n    \"_staffId.comment\": \"工号\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "微信医生获取接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/doctor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json;charset=UTF-8",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": [
+				{
+					"id": "798d6584-d6ac-4f3d-940c-417873ad98ce",
+					"name": "例1",
+					"originalRequest": {
+						"url": "http://42.193.190.7:8080/api/wx/doctor",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"_postman_previewtype": "text",
+					"header": [
+						{
+							"name": "access-control-allow-credentials",
+							"key": "access-control-allow-credentials",
+							"value": "true",
+							"description": "Indicates whether or not the response to the request can be exposed when the credentials flag is true. When used as part of a response to a preflight request, this indicates whether or not the actual request can be made using credentials."
+						},
+						{
+							"name": "access-control-allow-origin",
+							"key": "access-control-allow-origin",
+							"value": "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop",
+							"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+						},
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json;charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Sat, 22 Jan 2022 06:58:33 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "transfer-encoding",
+							"key": "transfer-encoding",
+							"value": "chunked",
+							"description": "The form of encoding used to safely transfer the entity to the user. Currently defined methods are: chunked, compress, deflate, gzip, identity."
+						},
+						{
+							"name": "vary",
+							"key": "vary",
+							"value": "Origin",
+							"description": "Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server."
+						}
+					],
+					"cookie": [],
+					"responseTime": 380,
+					"body": "{\"retcode\":200,\"message\":\"\",\"data\":{\"exists\":true,\"doctorStatus\":\"Unknown\",\"hospitalId\":1,\"hospitalName\":\"这一家医院\"}}"
+				}
+			]
+		},
+		{
+			"name": "新建或修改档案接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/profile/upsert",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"profileInfoDto\": {\r\n        \"profileId\": 1,\r\n        \"_profileId.comment\": \"档案Id，写操作不需要填写，后端自行生成\",\r\n        \"hospitalId\": 1,\r\n        \"_hospitalId.comment\": \"医院Id\",\r\n        \"personalID\": 1,\r\n        \"_personalID.comment\": \"身份证号码\",\r\n        \"gender\": \"Male\",\r\n        \"_gender.comment\": \"性别,Male,Female\",\r\n        \"pidAddress\": \"aaa\",\r\n        \"_pidAddress.comment\": \"身份证地址\",\r\n        \"homeAddress\": \"bbb\",\r\n        \"_homeAddress.comment\": \"家庭住址\"\r\n    },\r\n    \"_profileInfoDto.comment\": \"新建档案信息\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "获取所有档案接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/profiles",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "新建或修改预约接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/booking/upsert",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"档案id\",\r\n    \"bookingInfoDto\": {\r\n        \"bookingId\": -1,\r\n        \"_bookingId.comment\": \"预约Id，写操作自行生成\",\r\n        \"dateTime\": \"2022-01-23\",\r\n        \"_dateTime.comment\": \"预约日期，格式如yyyy-MM-dd\",\r\n        \"comboDtos\": [{\"comboId\":1},{\"comboId\":2}],\r\n        \"_comboDtos.comment\": \"套餐，一次预约可有多个套餐\"\r\n    },\r\n    \"_bookingInfoDto.comment\": \"预约信息\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "完成预约接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/booking/complete",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"档案id\",\r\n    \"bookingId\": 1,\r\n    \"_bookingId.comment\": \"预约Id\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "根据档案获取所有预约接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/bookings",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"根据档案id获取所有预约\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "根据预约id获取详细的预约信息",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/booking/detail",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"档案id\",\r\n    \"bookingId\": 1,\r\n    \"_bookingId.comment\": \"预约Id\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "根据预约id和科室id，获取对应体检项详情",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/booking/department/items",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"档案id\",\r\n    \"bookingId\": 1,\r\n    \"_bookingId.comment\": \"预约Id\",\r\n    \"departmentId\": 1,\r\n    \"_departmentId.comment\": \"科室Id\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "提交体检项目值",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/wx/booking/department/items/upsert",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\r\n    \"userId\": \"-6817634736334752994\",\r\n    \"hospitalId\": 1,\r\n    \"_hospitalId.comment\": \"医院id\",\r\n    \"profileId\": 13962,\r\n    \"_profileId.comment\": \"档案id\",\r\n    \"bookingId\": 1,\r\n    \"_bookingId.comment\": \"预约Id\",\r\n    \"departmentId\": 1,\r\n    \"_departmentId.comment\": \"科室Id\",\r\n    \"itemValueDtos\": [{\r\n    \t\"itemId\": 1,\r\n    \t\"value\": \"10\"\r\n    }],\r\n    \"_itemValueDtos.comment\": \"指标项值列表，需要包含该科室所有指标项值，不能将各指标项分开成多次提交\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "获取医院配置数据接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/config/hospital",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"hospitalIds\": [1],\n\t\"_hospitalIds.comment\": \"查询医院Id列表，为空时表示查询全部\",\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "获取科室配置数据接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/config/department",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"departmentIds\": [1, 2, 3],\n\t\"_departmentIds.comment\": \"查询科室Id列表，不能为空\",\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "获取套餐配置数据接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/config/combo",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"comboIds\": [1, 2, 3],\n\t\"_comboIds.comment\": \"查询套餐Id列表，不能为空\",\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "获取指标项配置数据接口",
+			"request": {
+				"url": "http://42.193.190.7:8080/api/config/item",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"itemIds\": [1, 2, 3, 4, 5, 6],\n\t\"_itemIds.comment\": \"查询指标项Id列表，不能为空\",\n    \"openId\": \"ofpYY5bEcFjSX8slgB2KPU8gsxtg\",\n    \"userId\": \"-6817634736334752994\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

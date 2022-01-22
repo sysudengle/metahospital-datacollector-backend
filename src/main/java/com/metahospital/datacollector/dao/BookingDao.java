@@ -47,13 +47,14 @@ public class BookingDao {
         }
     }
 
-    //添加一个数据库行为，根据bookingid取套餐
-    public Booking getComboIds(long bookingId){
+    public Booking get(int hospitalId, long profileId, long bookingId){
         SqlSession sqlSession = MysqlDao.getSqlSession();
         try {
             Map<String, Object> map = new HashMap();
+            map.put("hospitalId", hospitalId);
+            map.put("profileId", profileId);
             map.put("bookingId", bookingId);
-            List<Booking> list = sqlSession.selectList("BookingMapper.getComboIds", map);
+            List<Booking> list = sqlSession.selectList("BookingMapper.get", map);
             if (list == null || list.isEmpty()) {
                 return null;
             }

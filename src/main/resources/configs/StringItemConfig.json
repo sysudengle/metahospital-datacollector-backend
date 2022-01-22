@@ -1,0 +1,5 @@
+[{
+	"StringItemTypeId": 1,
+	"DefaultValue": "未见异常",
+	"MaxLength": 50
+}]

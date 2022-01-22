@@ -59,6 +59,7 @@
         <mapper resource="DepartmentMapper.xml"/>
         <mapper resource="ComboMapper.xml"/>
         <mapper resource="ComboItemsMapper.xml"/>
+        <mapper resource="DepartmentItemsMapper.xml"/>
 
     </mappers>
 

@@ -7,7 +7,7 @@
 
 <!-- namespace属性是名称空间，必须唯一 -->
 <mapper namespace="HospitalMapper">
-    <resultMap type="com.metahospital.datacollector.dao.data.Hospital" id="HospitalResultMap">
+    <resultMap type="com.metahospital.datacollector.dao.configbak.data.Hospital" id="HospitalResultMap">
         <id property="hospitalId" column="hospital_id"/>
         <result property="name" column="name"/>
     </resultMap>

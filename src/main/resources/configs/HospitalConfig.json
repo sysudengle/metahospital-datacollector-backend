@@ -1,0 +1,11 @@
+[{
+	"HospitalId": 1,
+	"HospitalName": "这一家医院",
+	"DepartmentIds": [1,2,3],
+	"ComboIds": [1,2,3]
+}, {
+	"HospitalId": 2,
+	"HospitalName": "那一家医院",
+	"DepartmentIds": [1,2],
+	"ComboIds": [1,3]
+}]

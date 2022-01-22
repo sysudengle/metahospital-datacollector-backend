@@ -7,7 +7,8 @@ import lombok.Data;
 public class AuthRspDto extends BaseDto {
     // TODO 补充额外小程序需要字段
     private UserType uType;
-    private DoctorInfoDto doctorInfo; // 如果是医生会包含医生信息
+    /** 如果是医生会包含医生信息 */
+    private DoctorInfoDto doctorInfo;
 
     public AuthRspDto() {
     }

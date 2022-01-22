@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 public class DoctorInfoDto {
     private HospitalDto hospital;
-    private DoctorStatus status = DoctorStatus.Unknown;
-    private List<DoctorPermissionDto> permissions = Collections.emptyList(); // 科室权限类型，全科室/外科/口腔科...
+    private DoctorStatus status;
+    private List<Integer> departmentIds;
 }

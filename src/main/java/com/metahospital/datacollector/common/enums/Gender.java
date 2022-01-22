@@ -10,21 +10,21 @@ public enum Gender {
     Female(2);
 
     private final int value;
+    
     Gender(int value){
         this.value = value;
     }
+    
     public int getValue(){
         return value;
     }
 
-    public static Gender convert(int value) {
-        Gender gender = Unknow;
-        if (value == Male.getValue()) {
-            gender = Male;
-        } else if (value == Female.getValue()) {
-            gender = Female;
+    public static Gender valueOf(int value){
+        for (Gender gender : values()) {
+            if (gender.getValue() == value) {
+                return gender;
+            }
         }
-
-        return gender;
+        return Unknow;
     }
 }

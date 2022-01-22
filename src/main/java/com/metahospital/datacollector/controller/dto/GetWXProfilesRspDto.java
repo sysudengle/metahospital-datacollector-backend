@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class GetWXProfilesRspDto {
+public class GetWXProfilesRspDto extends BaseDto {
     private List<ProfileInfoDto> profiles;
 
     public void setProfiles(List<ProfileInfoDto> profiles) {

@@ -14,14 +14,12 @@ public enum BookingStatus {
         return value;
     }
 
-    public static BookingStatus convert(int value) {
-        BookingStatus status = Unknown;
-        if (value == Processing.getValue()) {
-            status = Processing;
-        } else if (value == Completed.getValue()) {
-            status = Completed;
+    public static BookingStatus valueOf(int value) {
+        for (BookingStatus bookingStatus : values()) {
+            if (bookingStatus.getValue() == value) {
+                return bookingStatus;
+            }
         }
-
-        return status;
+        return Unknown;
     }
 }

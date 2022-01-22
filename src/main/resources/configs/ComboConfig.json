@@ -1,0 +1,9 @@
+[{
+	"ComboId": 1,
+	"ComboName": "套餐A",
+	"ItemIds": [1, 2]
+}, {
+	"ComboId": 2,
+	"ComboName": "套餐B",
+	"ItemIds": [1, 3]
+}]
