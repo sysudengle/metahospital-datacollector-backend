@@ -16,6 +16,13 @@
 		<result property="bookingStatus" column="booking_status"/>
     </resultMap>
 
+    <select id="getAllByUserId" parameterType="map" resultMap="BookingResultMap">
+        select b.hospital_id, b.profile_id, booking_id, date_time, combo_ids, booking_status
+        from booking as b
+        inner join (select hospital_id, profile_id from user_profile where user_id = #{userId}) as up
+        on b.hospital_id = up.hospital_id and b.profile_id = up.profile_id;
+    </select>
+
     <select id="getAll" parameterType="map" resultMap="BookingResultMap">
         select hospital_id, profile_id, booking_id, date_time, combo_ids, booking_status from booking where hospital_id = #{hospitalId} and profile_id = #{profileId};
     </select>

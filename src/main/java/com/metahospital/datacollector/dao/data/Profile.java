@@ -13,6 +13,7 @@ public class Profile {
 	private int hospitalId;
 	private long profileId;
 	private String personalID;
+	private String fullName;
 	private int gender;
 	private String pidAddress;
 	private String homeAddress;
@@ -20,10 +21,11 @@ public class Profile {
 	public Profile() {
 	}
 
-	public Profile(int hospitalId, long profileId, String personalID, int gender, String pidAddress, String homeAddress) {
+	public Profile(int hospitalId, long profileId, String personalID, String fullName, int gender, String pidAddress, String homeAddress) {
 		this.hospitalId = hospitalId;
 		this.profileId = profileId;
 		this.personalID = personalID;
+		this.fullName = fullName;
 		this.gender = gender;
 		this.pidAddress = pidAddress;
 		this.homeAddress = homeAddress;
@@ -53,7 +55,15 @@ public class Profile {
 		this.personalID = personalID;
 	}
 
-	public int getGender() {
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public int getGender() {
 		return gender;
 	}
 

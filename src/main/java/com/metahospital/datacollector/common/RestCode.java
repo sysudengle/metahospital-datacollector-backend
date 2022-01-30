@@ -17,6 +17,7 @@ public enum RestCode {
     // 400~499 返回码区间表示客户端错误
     PARAM_INVALID_ERR(400),
     DOCTOR_ALREADY_REGISTER_ERR(401),
+    INVALID_OPEN_ID_OR_USER_ID_ERR(402),
 
     // 500～600 返回码区间表示服务端错误
     DB_REQ_TIMEOUT_ERR(500),

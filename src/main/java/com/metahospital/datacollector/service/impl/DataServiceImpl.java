@@ -33,6 +33,7 @@ import com.metahospital.datacollector.service.DataService;
 import com.metahospital.datacollector.service.impl.itemhandler.IItemHandler;
 import com.metahospital.datacollector.service.impl.itemhandler.ItemHandlerManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,6 +208,7 @@ public class DataServiceImpl implements DataService {
         if (profileInfoDto.getGender() == null) {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR, "性别不能为空");
         }
+        StringUtil.checkStringNotEmptyWithLengthLimit(profileInfoDto.getFullName(), DataConst.FULL_NAME_LENGTH_LIMIT, "姓名");
         StringUtil.checkStringNotEmptyWithLengthLimit(profileInfoDto.getPidAddress(), DataConst.PID_ADDRESS_LENGTH_LIMIT, "身份证地址");
         StringUtil.checkStringNotEmptyWithLengthLimit(profileInfoDto.getHomeAddress(), DataConst.HOME_ADDRESS_LENGTH_LIMIT, "家庭住址");
         Profile oldProfile = profileDao.getByPersonalID(configData.getHospitalId(), profileInfoDto.getPersonalID());
@@ -228,13 +230,14 @@ public class DataServiceImpl implements DataService {
         Profile newProfile = new Profile(profileInfoDto.getHospitalId(),
                 profileId,
                 profileInfoDto.getPersonalID(),
+                profileInfoDto.getFullName(),
                 profileInfoDto.getGender().getValue(),
                 profileInfoDto.getPidAddress(),
                 profileInfoDto.getHomeAddress());
         // REVIEWED a) 减少重复代码，可引用 b) 后续连续db操作考虑用事务处理
         userProfileDao.replace(newUserProfile);
         profileDao.replace(newProfile);
-        return new AddWXProfileRspDto();
+        return new AddWXProfileRspDto(transProfileInfo(newProfile));
     }
 
     private boolean checkPersonalID(String personalID) {
@@ -254,20 +257,28 @@ public class DataServiceImpl implements DataService {
     public GetWXProfilesRspDto getProfiles(GetWXProfilesReqDto getWXProfilesReqDto) {
         // todo why == 目前设想profile表是按医院进行分表，而userProfile表是按用户进行分表，在分表后，联表操作要对应修改下
         // TOREVIEW 只用一次db的查询即可，用联表操作
-        List<Profile> profiles = profileDao.getAll(getWXProfilesReqDto.getUserId());
+        List<Profile> profiles;
+        if (HospitalConfig.get().get(getWXProfilesReqDto.getHospitalId()) != null) {
+            profiles = profileDao.getAllByHospitalId(getWXProfilesReqDto.getUserId(), getWXProfilesReqDto.getHospitalId());
+        } else {
+            profiles = profileDao.getAllByUserId(getWXProfilesReqDto.getUserId());
+        }
         GetWXProfilesRspDto getWXProfilesRspDto = new GetWXProfilesRspDto();
-        getWXProfilesRspDto.setProfiles(profiles.stream().map(profile -> {
-            // TOREVIEW 不用全参数构造函数，避免改变成员变量顺序时候出错，以及多次db读改一次db读
-            ProfileInfoDto profileInfoDto = new ProfileInfoDto();
-            profileInfoDto.setProfileId(profile.getProfileId());
-            profileInfoDto.setHomeAddress(profile.getHomeAddress());
-            profileInfoDto.setPersonalID(profile.getPersonalID());
-            profileInfoDto.setHospitalId(profile.getHospitalId());
-            profileInfoDto.setPidAddress(profile.getPidAddress());
-            profileInfoDto.setGender(Gender.valueOf(profile.getGender()));
-            return profileInfoDto;
-        }).collect(Collectors.toList()));
+        getWXProfilesRspDto.setProfiles(profiles.stream().map(this::transProfileInfo).collect(Collectors.toList()));
         return getWXProfilesRspDto;
+    }
+
+    private ProfileInfoDto transProfileInfo(Profile profile) {
+        // TOREVIEW 不用全参数构造函数，避免改变成员变量顺序时候出错，以及多次db读改一次db读
+        ProfileInfoDto profileInfoDto = new ProfileInfoDto();
+        profileInfoDto.setProfileId(profile.getProfileId());
+        profileInfoDto.setHomeAddress(profile.getHomeAddress());
+        profileInfoDto.setPersonalID(profile.getPersonalID());
+        profileInfoDto.setHospitalId(profile.getHospitalId());
+        profileInfoDto.setPidAddress(profile.getPidAddress());
+        profileInfoDto.setGender(Gender.valueOf(profile.getGender()));
+        profileInfoDto.setFullName(profile.getFullName());
+        return profileInfoDto;
     }
 
     /**
@@ -374,12 +385,26 @@ public class DataServiceImpl implements DataService {
         long userId = getWXBookingsReqDto.getUserId();
         long profileId = getWXBookingsReqDto.getProfileId();
         int hospitalId = getWXBookingsReqDto.getHospitalId();
-        checkUserProfile(userId, hospitalId, profileId);
-        List<Booking> bookings = bookingDao.getAll(hospitalId, profileId);
+        // todo why 要不使用医院id和profileId来查，要不直接使用用户来
+        List<Booking> bookings;
+        if (HospitalConfig.get().get(hospitalId) != null) {
+            bookings = getBookingsByHospitalIdAndProfileId(userId, profileId, hospitalId);
+        } else {
+            bookings = getBookingsByUserId(userId);
+        }
         GetWXBookingsRspDto rspDto = new GetWXBookingsRspDto();
         List<BookingInfoDto> bookingInfoDtos = bookings.stream().map(this::transBriefBookingInfoDto).collect(Collectors.toList());
         rspDto.setBookings(bookingInfoDtos);
         return rspDto;
+    }
+
+    private List<Booking> getBookingsByUserId(long userId) {
+        return bookingDao.getAllByUserId(userId);
+    }
+
+    private List<Booking> getBookingsByHospitalIdAndProfileId(long userId, long profileId, int hospitalId) {
+        checkUserProfile(userId, hospitalId, profileId);
+        return bookingDao.getAll(hospitalId, profileId);
     }
 
     private BookingInfoDto transBriefBookingInfoDto(Booking booking) {
@@ -569,12 +594,20 @@ public class DataServiceImpl implements DataService {
         }
         ItemConfig itemConfig = ItemConfig.get();
         List<ItemConfigData> configDataList = itemIds.stream().map(itemConfig::get).filter(Objects::nonNull).collect(Collectors.toList());
-        Map<Integer, Object> itemExtConfigData = configDataList.stream().collect(Collectors.toMap(
-                ItemConfigData::getItemId,
-                itemConfigData -> itemHandlerManager.getItemHandler(itemConfigData.getItemType()).getConfigData(itemConfigData.getItemTypeId())));
+        List<Object> itemExtConfigDataList = configDataList.stream()
+                .map(itemConfigData -> Pair.of(itemConfigData.getItemType(), itemConfigData.getItemTypeId()))
+                .collect(Collectors.toSet())
+                .stream()
+                .map(key -> {
+                    JSONObject jsonObject = (JSONObject) JSONObject.toJSON(itemHandlerManager.getItemHandler(key.getLeft()).getConfigData(key.getRight()));
+                    jsonObject.put("itemType", key.getLeft());
+                    return jsonObject;
+                })
+                .collect(Collectors.toList());
+        
         GetItemConfigRspDto rsp = new GetItemConfigRspDto();
         rsp.setItemConfigDataList(configDataList);
-        rsp.setItemExtConfigData(itemExtConfigData);
+        rsp.setItemExtConfigDataList(itemExtConfigDataList);
         return rsp;
     }
 
@@ -583,7 +616,7 @@ public class DataServiceImpl implements DataService {
     public <RES, REQ extends BaseDto> RestResponse<RES> authentication(REQ reqDto, Supplier<RES> resDtoSupplier) {
         // todo why == 应该改用sessionId的
         if (!userRedisDao.isExistOpenId(reqDto.getUserId(), reqDto.getOpenId())) {
-            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "无效的openId或userId");
+            throw new CollectorException(RestCode.INVALID_OPEN_ID_OR_USER_ID_ERR, "无效的openId或userId");
         }
         // 校验通过，延长过期时间
         userRedisDao.expireOpenId(reqDto.getUserId(), reqDto.getOpenId());

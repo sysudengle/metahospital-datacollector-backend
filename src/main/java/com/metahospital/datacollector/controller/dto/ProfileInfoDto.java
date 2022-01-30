@@ -15,6 +15,8 @@ public class ProfileInfoDto {
     private int hospitalId;
     /** 身份证号码 */
     private String personalID;
+    /** 全名 */
+    private String fullName;
     /** 性别 */
     private Gender gender;
     /** 身份证地址 */

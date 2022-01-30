@@ -22,13 +22,34 @@ import java.util.*;
 @Repository
 public class ProfileDao {
 
-    public List<Profile> getAll(long userId) {
+    public List<Profile> getAllByUserId(long userId) {
         SqlSession sqlSession = MysqlDao.getSqlSession();
         try {
             Map<String, Object> map = new HashMap();
             // map.put("hospitalId", hospitalId);
 	        map.put("userId", userId);
-            List<Profile> profiles = sqlSession.selectList("ProfileMapper.get", map);
+            List<Profile> profiles = sqlSession.selectList("ProfileMapper.getAllByUserId", map);
+            if (profiles == null || profiles.isEmpty()) {
+                return Collections.emptyList();
+            }
+            return profiles;
+        } catch (CollectorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, e.getLocalizedMessage());
+        } finally {
+            MysqlDao.closeSqlSession();
+        }
+    }
+
+    public List<Profile> getAllByHospitalId(long userId, int hospitalId) {
+        SqlSession sqlSession = MysqlDao.getSqlSession();
+        try {
+            Map<String, Object> map = new HashMap();
+            map.put("hospitalId", hospitalId);
+            map.put("userId", userId);
+            List<Profile> profiles = sqlSession.selectList("ProfileMapper.getAllByHospitalId", map);
             if (profiles == null || profiles.isEmpty()) {
                 return Collections.emptyList();
             }

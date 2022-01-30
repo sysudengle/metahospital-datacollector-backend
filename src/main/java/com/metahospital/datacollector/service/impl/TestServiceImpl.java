@@ -101,7 +101,7 @@ public class TestServiceImpl implements TestService {
 	    userProfileDao.replace(new UserProfile(userId, hospitalId, profileId));
 	    List<UserProfile> userProfile = userProfileDao.getAll(userId);
 	    String personalID = "1111111000000";
-	    profileDao.replace(new Profile(hospitalId, profileId, personalID, Gender.Male.getValue(), "abc", "abcd"));
+	    profileDao.replace(new Profile(hospitalId, profileId, personalID, "", Gender.Male.getValue(), "abc", "abcd"));
 //	    Profile profile = profileDao.get(hospitalId, profileId);
 	    Profile profile1 = profileDao.getByPersonalID(hospitalId, personalID);
 	    long bookingId = randomNextLong();

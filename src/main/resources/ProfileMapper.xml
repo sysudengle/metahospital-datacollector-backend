@@ -11,27 +11,35 @@
 	    <id property="hospitalId" column="hospital_id"/>
 	    <id property="profileId" column="profile_id"/>
 	    <result property="personalID" column="personal_id"/>
+        <result property="fullName" column="full_name"/>
 	    <result property="gender" column="gender"/>
 	    <result property="pidAddress" column="pid_address"/>
 	    <result property="homeAddress" column="home_address"/>
     </resultMap>
 
 
-    <select id="get" parameterType="map" resultMap="ProfileResultMap">
-        select hospital_id, up.profile_id, personal_id, gender, pid_address, home_address
+    <select id="getAllByUserId" parameterType="map" resultMap="ProfileResultMap">
+        select hospital_id, up.profile_id, personal_id, full_name, gender, pid_address, home_address
 		from profile as p
 		inner join (select profile_id from user_profile where user_id = #{userId}) as up
 		on p.profile_id = up.profile_id;
     </select>
 
+    <select id="getAllByHospitalId" parameterType="map" resultMap="ProfileResultMap">
+        select up.hospital_id, up.profile_id, personal_id, full_name, gender, pid_address, home_address
+        from profile as p
+        inner join (select hospital_id, profile_id from user_profile where user_id = #{userId} and hospital_id = #{hospitalId}) as up
+        on p.hospital_id = up.hospital_id and p.profile_id = up.profile_id;
+    </select>
+
 	<select id="getByPersonalID" parameterType="map" resultMap="ProfileResultMap">
-        select hospital_id, profile_id, personal_id, gender, pid_address, home_address from profile where hospital_id = #{hospitalId} and personal_id = #{personalID};
+        select hospital_id, profile_id, personal_id, full_name, gender, pid_address, home_address from profile where hospital_id = #{hospitalId} and personal_id = #{personalID};
     </select>
 
 	<update id="replace" parameterType="com.metahospital.datacollector.dao.data.Profile">
 		replace into profile
-		(hospital_id, profile_id, personal_id, gender, pid_address, home_address)
+		(hospital_id, profile_id, personal_id, full_name, gender, pid_address, home_address)
 		values
-		(#{hospitalId}, #{profileId}, #{personalID}, #{gender}, #{pidAddress}, #{homeAddress});
+		(#{hospitalId}, #{profileId}, #{personalID}, #{fullName}, #{gender}, #{pidAddress}, #{homeAddress});
     </update>
 </mapper>

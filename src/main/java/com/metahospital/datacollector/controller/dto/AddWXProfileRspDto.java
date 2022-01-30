@@ -7,4 +7,9 @@ import lombok.Data;
  */
 @Data
 public class AddWXProfileRspDto extends BaseRspDto {
+    private ProfileInfoDto profile;
+
+    public AddWXProfileRspDto(ProfileInfoDto profile) {
+        this.profile = profile;
+    }
 }

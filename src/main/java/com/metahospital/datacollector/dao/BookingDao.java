@@ -83,5 +83,24 @@ public class BookingDao {
             MysqlDao.closeSqlSession();
         }
     }
-    
+
+    public List<Booking> getAllByUserId(long userId) {
+        SqlSession sqlSession = MysqlDao.getSqlSession();
+        try {
+            Map<String, Object> map = new HashMap();
+            map.put("userId", userId);
+            List<Booking> list = sqlSession.selectList("BookingMapper.getAllByUserId", map);
+            if (list == null || list.isEmpty()) {
+                return Collections.emptyList();
+            }
+            return list;
+        } catch (CollectorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, e.getLocalizedMessage());
+        } finally {
+            MysqlDao.closeSqlSession();
+        }
+    }
 }

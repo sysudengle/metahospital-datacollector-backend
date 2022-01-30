@@ -20,5 +20,5 @@ public class GetItemConfigRspDto {
      * 2:字符类型扩展配置数据 {@link StringItemConfigData} <br>
      * 3:选择列表类型扩展配置数据 {@link SelectionItemConfigData} <br>
      **/
-    private Map<Integer, Object> itemExtConfigData;
+    private List<Object> itemExtConfigDataList;
 }
