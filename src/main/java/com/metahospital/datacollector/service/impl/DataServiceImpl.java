@@ -492,7 +492,8 @@ public class DataServiceImpl implements DataService {
         long userId = upsertWXItemReqDto.getUserId();
         int hospitalId = upsertWXItemReqDto.getHospitalId();
         long profileId = upsertWXItemReqDto.getProfileId();
-        checkUserProfile(userId, hospitalId, profileId);
+        int departmentId = upsertWXItemReqDto.getDepartmentId();
+        checkUserDoctor(userId, hospitalId, departmentId);
         long bookingId = upsertWXItemReqDto.getBookingId();
         Booking booking = bookingDao.get(hospitalId, profileId, bookingId);
         if (booking == null) {
@@ -510,7 +511,6 @@ public class DataServiceImpl implements DataService {
         if (itemValueDtos.stream().anyMatch(itemValueDto -> !comboItemIds.contains(itemValueDto.getItemId()))) {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR, "套餐中不包含部分指标项");
         }
-        int departmentId = upsertWXItemReqDto.getDepartmentId();
         if (itemValueDtos.stream().anyMatch(itemValueDto -> ItemConfig.get().get(itemValueDto.getItemId()).getDepartmentId() != departmentId)) {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR, "科室中不包含部分指标项");
         }
@@ -524,6 +524,19 @@ public class DataServiceImpl implements DataService {
         String itemValues = dumpItemValues(itemValueDtos.stream().collect(Collectors.toMap(ItemValueDto::getItemId, ItemValueDto::getValue)));
         departmentItemsDao.replace(new DepartmentItems(hospitalId, profileId, bookingId, departmentId, itemValues));
         return new UpsertWXItemRspDto();
+    }
+
+    private void checkUserDoctor(long userId, int hospitalId, int departmentId) {
+        UserDoctor userDoctor = userDoctorDao.get(userId);
+        if (userDoctor == null) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "需开通医生权限");
+        }
+        if (userDoctor.getHospitalId() != hospitalId) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "该医生账号不属于该医院");
+        }
+        if (!JsonUtil.loadIntegerList(userDoctor.getDepartmentIds()).contains(departmentId)) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "该医生账号不属于该科室");
+        }
     }
 
     private Set<Integer> calcComboItemIds(List<Integer> comboIds) {
