@@ -250,7 +250,7 @@ public class DataServiceImpl implements DataService {
 
     private long genProfileId(List<UserProfile> userProfiles) {
         // TODO(max) 替换为全局统一id
-        return userProfiles.stream().mapToLong(UserProfile::getProfileId).max().orElse(0) + 1;
+        return System.nanoTime();
     }
 
     @Override
