@@ -469,12 +469,43 @@ public class DataServiceImpl implements DataService {
         long profileId = getWXItemsReqDto.getProfileId();
         checkUserProfile(userId, hospitalId, profileId);
         long bookingId = getWXItemsReqDto.getBookingId();
-        int departmentId = getWXItemsReqDto.getDepartmentId();
-        DepartmentItems departmentItems = departmentItemsDao.get(hospitalId, profileId, bookingId, departmentId);
-        if (departmentItems == null) {
-            return Collections.emptyList();
+        Booking booking = bookingDao.get(hospitalId, profileId, bookingId);
+        if (booking == null) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "无效的预约");
         }
-        return transItemValueDtos(departmentItems);
+        List<Integer> comboIds = loadComboIds(booking.getComboIds());
+        int departmentId = getWXItemsReqDto.getDepartmentId();
+        Set<Integer> comboDepartmentItemIds = calcComboDepartmentItemIds(comboIds, departmentId);
+        DepartmentItems departmentItems = departmentItemsDao.get(hospitalId, profileId, bookingId, departmentId);
+        List<ItemValueDto> itemValueDtos = departmentItems == null ? Collections.emptyList() : transItemValueDtos(departmentItems);
+        return fillItemValueDtosWithEmptyValue(itemValueDtos, comboDepartmentItemIds);
+    }
+
+    private Set<Integer> calcComboDepartmentItemIds(List<Integer> comboIds, int departmentId) {
+        List<Integer> itemIds = comboIds.stream()
+                .map(comboId -> ComboConfig.get().get(comboId))
+                .map(ComboConfigData::getItemIds)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        DepartmentConfigData departmentConfigData = DepartmentConfig.get().get(departmentId);
+        if (departmentConfigData == null) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "科室不存在");
+        }
+        return departmentConfigData.getItemIds().stream().filter(itemIds::contains).collect(Collectors.toSet());
+    }
+
+    private List<ItemValueDto> fillItemValueDtosWithEmptyValue(List<ItemValueDto> itemValueDtos, Set<Integer> comboDepartmentItemIds) {
+        List<ItemValueDto> result = new ArrayList<>();
+        Set<Integer> itemIds = itemValueDtos.stream().map(ItemValueDto::getItemId).collect(Collectors.toSet());
+        List<ItemValueDto> emptyItemValueDtos = comboDepartmentItemIds.stream().filter(itemId -> !itemIds.contains(itemId)).map(itemId -> {
+            ItemValueDto itemValueDto = new ItemValueDto();
+            itemValueDto.setItemId(itemId);
+            itemValueDto.setValue("");
+            return itemValueDto;
+        }).collect(Collectors.toList());
+        result.addAll(itemValueDtos);
+        result.addAll(emptyItemValueDtos);
+        return result;
     }
 
     private List<ItemValueDto> transItemValueDtos(DepartmentItems departmentItems) {
@@ -507,12 +538,10 @@ public class DataServiceImpl implements DataService {
             throw new CollectorException(RestCode.PARAM_INVALID_ERR, "体检指标项的值不能为空");
         }
         List<Integer> comboIds = loadComboIds(booking.getComboIds());
-        Set<Integer> comboItemIds = calcComboItemIds(comboIds);
-        if (itemValueDtos.stream().anyMatch(itemValueDto -> !comboItemIds.contains(itemValueDto.getItemId()))) {
-            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "套餐中不包含部分指标项");
-        }
-        if (itemValueDtos.stream().anyMatch(itemValueDto -> ItemConfig.get().get(itemValueDto.getItemId()).getDepartmentId() != departmentId)) {
-            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "科室中不包含部分指标项");
+        Set<Integer> comboDepartmentItemIds = calcComboDepartmentItemIds(comboIds, departmentId);
+        Set<Integer> itemIds = itemValueDtos.stream().map(ItemValueDto::getItemId).collect(Collectors.toSet());
+        if (itemIds.size() != comboDepartmentItemIds.size() || itemIds.stream().anyMatch(itemId -> !comboDepartmentItemIds.contains(itemId))) {
+            throw new CollectorException(RestCode.PARAM_INVALID_ERR, "应提交本套餐本科室包含的所有指标项值");
         }
         // 根据不同的指标项类型进行检查
         for (ItemValueDto itemValueDto : itemValueDtos) {
